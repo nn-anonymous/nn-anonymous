@@ -352,13 +352,20 @@
             return;
           }
 
+          
           // 第三步：管理員驗證成功
           showMessage(
-            "✅ 管理員身分驗證成功！NN匿名審核後台目前正在建置中。",
+            "✅ 管理員身分驗證成功！正在進入審核後台……",
             "success"
           );
 
           password.value = "";
+
+          // 自動前往 NN匿名管理員審核後台
+          window.location.replace(
+            "admin-dashboard.html"
+          );
+
 
         } catch (error) {
           console.error("登入流程異常：", error);
