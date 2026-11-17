@@ -1,0 +1,563 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080f26">
+<meta name="robots" content="noindex, nofollow">
+<title>管理員審核後台｜NN匿名</title>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont,
+      "Noto Sans TC", sans-serif;
+    color: #fff;
+    background:
+      radial-gradient(circle at 10% 10%,
+        #243e86, transparent 38%),
+      radial-gradient(circle at 90% 85%,
+        #40266c, transparent 38%),
+      #080f26;
+  }
+
+  header {
+    padding: 22px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #ffffff20;
+  }
+
+  .brand {
+    color: #a9caff;
+    font-size: 21px;
+    font-weight: 900;
+  }
+
+  .small {
+    color: #a5b6d5;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  main {
+    max-width: 850px;
+    margin: auto;
+    padding: 32px 18px 70px;
+  }
+
+  h1 { font-size: 28px; margin-bottom: 8px; }
+
+  .panel {
+    background: #ffffff0d;
+    border: 1px solid #ffffff25;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .count {
+    font-size: 27px;
+    font-weight: 900;
+    color: #9ec5ff;
+  }
+
+  button, select {
+    color: #fff;
+    font: inherit;
+    border-radius: 12px;
+    border: 1px solid #52658e;
+    padding: 12px 14px;
+    background: #17294b;
+  }
+
+  button { cursor: pointer; }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: .5;
+  }
+
+  select {
+    max-width: 100%;
+    min-width: 130px;
+  }
+
+  .primary {
+    background: linear-gradient(135deg,
+      #297dff, #7950e8);
+    border: none;
+    font-weight: 700;
+  }
+
+  .approve {
+    background: #125546;
+    border-color: #288d70;
+  }
+
+  .reject {
+    background: #602939;
+    border-color: #a44b61;
+  }
+
+  .logout { font-size: 13px; }
+
+  .entry {
+    margin-top: 15px;
+    padding: 20px;
+    border-radius: 17px;
+    background: #101d3b;
+    border: 1px solid #ffffff22;
+  }
+
+  .entry-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13px;
+    color: #b8c9e9;
+  }
+
+  .content {
+    margin: 18px 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.85;
+    font-size: 15px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .actions button { flex: 1; }
+
+  .pill {
+    border-radius: 30px;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: #fff;
+    background: #344364;
+  }
+
+  .pending { background: #715322; }
+  .approved { background: #14604d; }
+  .rejected { background: #6a3040; }
+
+  #notice {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #17294b;
+    color: #d3e3ff;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  #dashboard { display: none; }
+
+  .empty {
+    text-align: center;
+    padding: 30px 10px;
+    color: #a9badb;
+  }
+
+  footer {
+    color: #899abb;
+    text-align: center;
+    font-size: 12px;
+    padding: 25px;
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <div class="brand">NN匿名</div>
+    <div class="small">ADMIN DASHBOARD · V1.0</div>
+  </div>
+  <button class="logout" id="logoutBtn"
+          disabled>登出</button>
+</header>
+
+<main>
+  <h1>投稿審核後台</h1>
+  <p class="small">
+    僅限已授權的管理員使用。
+    投稿內容不會因審核通過而自動公開。
+  </p>
+
+  <div id="notice" role="status"
+       aria-live="polite">
+    🔐 正在驗證管理員身分……
+  </div>
+
+  <div id="dashboard">
+
+    <section class="panel">
+      <div class="row">
+        <div>
+          <div class="small">已載入投稿數量</div>
+          <div class="count" id="totalCount">0</div>
+        </div>
+
+        <div>
+          <label for="filter" class="small">
+            投稿狀態
+          </label>
+          <select id="filter">
+            <option value="pending">待審核</option>
+            <option value="approved">已通過</option>
+            <option value="rejected">已拒絕</option>
+            <option value="all">全部</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:18px">
+        <span class="small">
+          每次最多載入 50 筆最新投稿
+        </span>
+        <button class="primary" id="refreshBtn">
+          重新整理
+        </button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 style="margin:0;font-size:20px">
+        匿名投稿列表
+      </h2>
+
+      <div id="list">
+        <p class="empty">正在載入投稿……</p>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  © 2026 NN匿名<br>
+  獨立經營的匿名交流平台
+</footer>
+
+<script type="module">
+  import { createClient } from
+    "https://esm.sh/@supabase/supabase-js@2";
+
+  const supabase = createClient(
+    "https://skasotsajckswovqhbeo.supabase.co",
+    "sb_publishable_k81-D28G-ipWmKVRwX2zpg_7y_xMvLX",
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: false
+      }
+    }
+  );
+
+  const notice = document.getElementById("notice");
+  const dashboard =
+    document.getElementById("dashboard");
+  const logoutBtn =
+    document.getElementById("logoutBtn");
+  const refreshBtn =
+    document.getElementById("refreshBtn");
+  const filter = document.getElementById("filter");
+  const list = document.getElementById("list");
+  const totalCount =
+    document.getElementById("totalCount");
+
+  let authorized = false;
+  let loading = false;
+
+  function setNotice(text) {
+    notice.textContent = text;
+  }
+
+  function loginLink() {
+    const a = document.createElement("a");
+    a.href = "admin-login.html";
+    a.textContent = "前往管理員登入";
+    a.style.color = "#a9caff";
+    a.style.display = "inline-block";
+    a.style.marginTop = "12px";
+    notice.appendChild(document.createElement("br"));
+    notice.appendChild(a);
+  }
+
+  function formattedTime(value) {
+    if (!value) return "時間不明";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return "時間不明";
+    }
+    return date.toLocaleString("zh-TW", {
+      timeZone: "Asia/Taipei",
+      hour12: false
+    });
+  }
+
+  function statusName(status) {
+    if (status === "pending") return "待審核";
+    if (status === "approved") return "已通過";
+    if (status === "rejected") return "已拒絕";
+    return "其他狀態";
+  }
+
+  async function verifyAdmin() {
+    setNotice("🔐 正在驗證管理員身分……");
+
+    const { data, error } =
+      await supabase.auth.getUser();
+
+    if (error || !data.user) {
+      throw new Error("not_logged_in");
+    }
+
+    const { data: isAdmin, error: roleError } =
+      await supabase.rpc("is_nn_admin");
+
+    if (roleError || isAdmin !== true) {
+      throw new Error("not_admin");
+    }
+
+    authorized = true;
+    dashboard.style.display = "block";
+    logoutBtn.disabled = false;
+
+    setNotice("✅ 管理員身分已驗證，可以開始審核。");
+  }
+
+  async function loadMessages() {
+    if (!authorized || loading) return;
+
+    loading = true;
+    refreshBtn.disabled = true;
+
+    list.replaceChildren();
+    const loadingText = document.createElement("p");
+    loadingText.className = "empty";
+    loadingText.textContent = "正在讀取投稿……";
+    list.appendChild(loadingText);
+
+    try {
+      let query = supabase
+        .from("messages")
+        .select("id,content,status,created_at")
+        .order("created_at", {
+          ascending: false
+        })
+        .limit(50);
+
+      if (filter.value !== "all") {
+        query = query.eq("status", filter.value);
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+
+      renderMessages(data || []);
+
+    } catch (error) {
+      console.error("讀取投稿失敗：", error);
+      list.replaceChildren();
+
+      const p = document.createElement("p");
+      p.className = "empty";
+      p.textContent =
+        "無法讀取投稿，請確認管理員權限與資料庫設定。";
+      list.appendChild(p);
+
+      setNotice("⚠️ 投稿列表載入失敗。");
+
+    } finally {
+      loading = false;
+      refreshBtn.disabled = false;
+    }
+  }
+
+  function renderMessages(messages) {
+    list.replaceChildren();
+    totalCount.textContent = String(messages.length);
+
+    if (messages.length === 0) {
+      const p = document.createElement("p");
+      p.className = "empty";
+      p.textContent = "目前沒有符合條件的投稿。";
+      list.appendChild(p);
+      return;
+    }
+
+    for (const item of messages) {
+      const entry = document.createElement("article");
+      entry.className = "entry";
+
+      const heading = document.createElement("div");
+      heading.className = "entry-header";
+
+      const info = document.createElement("span");
+      info.textContent =
+        "投稿 #" + item.id + " · " +
+        formattedTime(item.created_at);
+
+      const badge = document.createElement("span");
+      badge.className = "pill " + (
+        ["pending", "approved", "rejected"]
+          .includes(item.status)
+          ? item.status : ""
+      );
+      badge.textContent = statusName(item.status);
+
+      heading.append(info, badge);
+
+      const content = document.createElement("div");
+      content.className = "content";
+
+      // 使用 textContent，避免投稿內容被執行為 HTML。
+      content.textContent = item.content || "";
+
+      entry.append(heading, content);
+
+      if (item.status === "pending") {
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        const approve = document.createElement("button");
+        approve.className = "approve";
+        approve.textContent = "✓ 通過";
+
+        const reject = document.createElement("button");
+        reject.className = "reject";
+        reject.textContent = "✕ 拒絕";
+
+        approve.addEventListener("click", () =>
+          updateStatus(item.id, "approved", actions)
+        );
+
+        reject.addEventListener("click", () =>
+          updateStatus(item.id, "rejected", actions)
+        );
+
+        actions.append(approve, reject);
+        entry.appendChild(actions);
+      }
+
+      list.appendChild(entry);
+    }
+  }
+
+  async function updateStatus(id, nextStatus, actions) {
+    if (!authorized) return;
+
+    const actionText =
+      nextStatus === "approved" ? "通過" : "拒絕";
+
+    const confirmed = window.confirm(
+      "確定要" + actionText +
+      "投稿 #" + id + " 嗎？"
+    );
+
+    if (!confirmed) return;
+
+    const buttons = actions.querySelectorAll("button");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+      // 只修改 pending 投稿的 status。
+      const { data, error } = await supabase
+        .from("messages")
+        .update({ status: nextStatus })
+        .eq("id", id)
+        .eq("status", "pending")
+        .select("id");
+
+      if (error) throw error;
+
+      if (!data || data.length !== 1) {
+        setNotice(
+          "⚠️ 投稿狀態可能已被其他管理員修改，請重新整理。"
+        );
+      } else {
+        setNotice(
+          "✅ 投稿 #" + id + " 已" + actionText +
+          "。此操作不會自動公開發布。"
+        );
+      }
+
+      await loadMessages();
+
+    } catch (error) {
+      console.error("審核更新失敗：", error);
+      setNotice(
+        "⚠️ 無法確認投稿 #" + id +
+        " 的審核結果，請先重新整理查看狀態。"
+      );
+      buttons.forEach(btn => btn.disabled = false);
+    }
+  }
+
+  logoutBtn.addEventListener("click", async () => {
+    logoutBtn.disabled = true;
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      setNotice("登出未完成，請檢查連線後再試。");
+      logoutBtn.disabled = false;
+      return;
+    }
+
+    authorized = false;
+    dashboard.style.display = "none";
+    window.location.replace("admin-login.html");
+  });
+
+  refreshBtn.addEventListener("click", loadMessages);
+  filter.addEventListener("change", loadMessages);
+
+  try {
+    await verifyAdmin();
+    await loadMessages();
+  } catch (error) {
+    console.error("身分驗證未通過：", error);
+
+    authorized = false;
+    dashboard.style.display = "none";
+
+    if (error.message === "not_admin") {
+      setNotice("⛔ 此帳號沒有 NN匿名管理員權限。");
+    } else {
+      setNotice("🔒 請先登入管理員帳號。");
+    }
+
+    loginLink();
+  }
+</script>
+
+</body>
+</html>
