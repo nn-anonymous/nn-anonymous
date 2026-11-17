@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080f26">
+  <meta name="description" content="NN匿名｜匿名投稿平台">
+  <title>NN匿名｜匿名投稿平台</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont,
+        "Noto Sans TC", sans-serif;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 15% 20%,
+          #243e86 0%, transparent 35%),
+        radial-gradient(circle at 85% 65%,
+          #40266c 0%, transparent 35%),
+        #080f26;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 7%;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: #83b5ff;
+    }
+
+    .version {
+      font-size: 12px;
+      color: #a9b8da;
+      border: 1px solid #405078;
+      padding: 7px 12px;
+      border-radius: 30px;
+    }
+
+    main {
+      max-width: 750px;
+      margin: auto;
+      padding: 85px 24px 60px;
+      text-align: center;
+    }
+
+    .symbol {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 30px;
+      font-size: 38px;
+      font-weight: 900;
+      background: linear-gradient(135deg,
+        #3688ff, #8b5cf6);
+      box-shadow: 0 15px 60px #3b62ff55;
+    }
+
+    h1 {
+      font-size: clamp(40px, 9vw, 64px);
+      margin: 0 0 18px;
+      letter-spacing: 2px;
+    }
+
+    h1 span {
+      color: #91b8ff;
+    }
+
+    .subtitle {
+      font-size: 19px;
+      font-weight: 600;
+      color: #d6e3ff;
+    }
+
+    .description {
+      max-width: 500px;
+      margin: 24px auto 35px;
+      line-height: 1.9;
+      font-size: 15px;
+      color: #aebcda;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 17px 36px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg,
+        #297dff, #7950e8);
+      box-shadow: 0 10px 35px #3665ff55;
+    }
+
+    .notice {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #9daed1;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 85px;
+    }
+
+    .feature {
+      padding: 25px 14px;
+      border-radius: 20px;
+      background: #ffffff0b;
+      border: 1px solid #ffffff20;
+    }
+
+    .feature .emoji {
+      font-size: 28px;
+    }
+
+    .feature h3 {
+      font-size: 15px;
+      margin: 14px 0 8px;
+    }
+
+    .feature p {
+      color: #a9b8d6;
+      font-size: 12px;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px 20px;
+      color: #8595b7;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding-top: 55px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+        margin-top: 65px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">NN<span>匿名</span></div>
+    <div class="version">VERSION 1.0</div>
+  </header>
+
+  <main>
+    <div class="symbol">NN</div>
+
+    <h1>NN<span>匿名</span></h1>
+
+    <div class="subtitle">
+      你的想法，值得被聽見。
+    </div>
+
+    <p class="description">
+      一個自由分享心聲的匿名投稿平台。
+      無論是生活趣事、心情故事，
+      還是想說卻不方便公開的話，
+      都歡迎在這裡分享。
+      請保持尊重，避免提供個人敏感資訊。
+    </p>
+
+    <a class="button" href="submit.html">
+      開始匿名投稿 →
+    </a>
+
+    <div class="notice">
+      投稿功能建置中，敬請期待
+    </div>
+
+    <section class="features">
+      <div class="feature">
+        <div class="emoji">📝</div>
+        <h3>匿名分享</h3>
+        <p>不用公開身分，也能表達想法。</p>
+      </div>
+
+      <div class="feature">
+        <div class="emoji">🛡️</div>
+        <h3>內容審核</h3>
+        <p>投稿將經過審核後才決定是否發布。</p>
+      </div>
+
+      <div class="feature">
+        <div class="emoji">💬</div>
+        <h3>友善交流</h3>
+        <p>尊重不同聲音，打造友善空間。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 NN匿名<br>
+    獨立經營的匿名交流平台<br>
+    非任何學校或官方機構所設立
+  </footer>
+</body>
+</html>
