@@ -3,27 +3,42 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080f26">
+  <meta name="description"
+        content="NN匿名｜匿名投稿平台">
   <title>匿名投稿｜NN匿名</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
       padding: 25px 16px;
-      font-family: -apple-system, BlinkMacSystemFont,
+      font-family: -apple-system,
+        BlinkMacSystemFont,
         "Noto Sans TC", sans-serif;
-      color: white;
+      color: #ffffff;
       background:
-        radial-gradient(circle at 10% 10%, #243e86, transparent 40%),
-        radial-gradient(circle at 90% 90%, #40266c, transparent 40%),
+        radial-gradient(
+          circle at 10% 10%,
+          #243e86,
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 90% 90%,
+          #40266c,
+          transparent 40%
+        ),
         #080f26;
     }
 
     .container {
+      width: 100%;
       max-width: 560px;
       margin: 30px auto;
     }
@@ -33,6 +48,7 @@
       color: #a9caff;
       text-decoration: none;
       margin-bottom: 25px;
+      font-size: 14px;
     }
 
     .card {
@@ -40,16 +56,20 @@
       border: 1px solid #ffffff25;
       border-radius: 24px;
       background: #ffffff0d;
+      box-shadow: 0 15px 50px #00000035;
     }
 
     .logo {
       color: #91b8ff;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 800;
       letter-spacing: 2px;
     }
 
-    h1 { font-size: 30px; margin: 12px 0; }
+    h1 {
+      font-size: 30px;
+      margin: 12px 0;
+    }
 
     .description {
       color: #b5c4e3;
@@ -76,9 +96,16 @@
       font: inherit;
       font-size: 15px;
       line-height: 1.7;
+      outline: none;
     }
 
-    textarea::placeholder { color: #899abb; }
+    textarea:focus {
+      border-color: #80adff;
+    }
+
+    textarea::placeholder {
+      color: #899abb;
+    }
 
     .counter {
       text-align: right;
@@ -107,6 +134,14 @@
       line-height: 1.7;
     }
 
+    .check input {
+      margin-top: 4px;
+      accent-color: #639bff;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
     button {
       width: 100%;
       margin-top: 24px;
@@ -116,11 +151,18 @@
       color: white;
       font-size: 16px;
       font-weight: bold;
-      background: linear-gradient(135deg, #297dff, #7950e8);
+      background: linear-gradient(
+        135deg,
+        #297dff,
+        #7950e8
+      );
       cursor: pointer;
     }
 
-    button:disabled { opacity: .5; }
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
 
     #message {
       display: none;
@@ -130,7 +172,18 @@
       background: #17294b;
       color: #c9dcff;
       font-size: 14px;
-      line-height: 1.7;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    #message.success {
+      background: #123d39;
+      color: #b7f9de;
+    }
+
+    #message.warning {
+      background: #45331b;
+      color: #ffe4ad;
     }
 
     footer {
@@ -145,10 +198,15 @@
 
 <body>
   <div class="container">
-    <a class="back" href="index.html">← 返回 NN匿名首頁</a>
+
+    <a class="back" href="index.html">
+      ← 返回 NN匿名首頁
+    </a>
 
     <div class="card">
+
       <div class="logo">NN ANONYMOUS</div>
+
       <h1>匿名投稿</h1>
 
       <p class="description">
@@ -156,8 +214,11 @@
         歡迎分享你的生活、想法與故事。
       </p>
 
-      <form id="投稿表單">
-        <label for="content">投稿內容</label>
+      <form id="submissionForm">
+
+        <label for="content">
+          投稿內容
+        </label>
 
         <textarea
           id="content"
@@ -174,53 +235,97 @@
           🛡️ 投稿提醒：
           <br>・請勿填寫姓名、電話、住址等個人資訊。
           <br>・請勿發布威脅、騷擾或侵犯他人隱私的內容。
-          <br>・投稿需要經過管理員人工審核。
+          <br>・投稿需經過管理員人工審核。
           <br>・匿名投稿仍須遵守法律。
+          <br>・投稿不保證一定公開發布。
         </div>
 
         <label class="check">
-          <input type="checkbox" id="agree" required>
-          <span>我已閱讀投稿提醒，並願意遵守平台規則。</span>
+          <input
+            type="checkbox"
+            id="agree"
+            required
+          >
+          <span>
+            我已閱讀投稿提醒，並願意遵守平台規則。
+          </span>
         </label>
 
         <button type="submit" id="submitBtn">
           確認投稿
         </button>
 
-        <div id="message" role="status"></div>
+        <div
+          id="message"
+          role="status"
+          aria-live="polite"
+        ></div>
+
       </form>
     </div>
 
     <footer>
       © 2026 NN匿名<br>
-      獨立經營的匿名交流平台
+      獨立經營的匿名交流平台<br>
+      非任何學校或官方機構所設立
     </footer>
+
   </div>
 
   <script type="module">
-    import { createClient }
-      from "https://esm.sh/@supabase/supabase-js@2";
+    import { createClient } from
+      "https://esm.sh/@supabase/supabase-js@2";
 
     const SUPABASE_URL =
       "https://skasotsajckswovqhbeo.supabase.co";
 
+    // 公開金鑰，不是 Secret Key
     const SUPABASE_KEY =
       "sb_publishable_k81-D28G-ipWmKVRwX2zpg_7y_xMvLX";
 
     const supabase = createClient(
       SUPABASE_URL,
-      SUPABASE_KEY
+      SUPABASE_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        }
+      }
     );
 
-    const form = document.getElementById("投稿表單");
-    const content = document.getElementById("content");
-    const count = document.getElementById("count");
-    const button = document.getElementById("submitBtn");
-    const message = document.getElementById("message");
+    const form =
+      document.getElementById("submissionForm");
 
-    function showMessage(text) {
+    const content =
+      document.getElementById("content");
+
+    const count =
+      document.getElementById("count");
+
+    const agree =
+      document.getElementById("agree");
+
+    const button =
+      document.getElementById("submitBtn");
+
+    const message =
+      document.getElementById("message");
+
+    let isSubmitting = false;
+    let resultNeedsChecking = false;
+
+    function showMessage(text, type = "") {
       message.style.display = "block";
+      message.className = type;
       message.textContent = text;
+    }
+
+    function lockForChecking() {
+      resultNeedsChecking = true;
+      button.disabled = true;
+      button.textContent = "請先確認投稿結果";
     }
 
     content.addEventListener("input", () => {
@@ -230,6 +335,10 @@
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      if (isSubmitting || resultNeedsChecking) {
+        return;
+      }
+
       const text = content.value.trim();
 
       if (!text) {
@@ -237,45 +346,88 @@
         return;
       }
 
-      if (!document.getElementById("agree").checked) {
+      if (text.length > 2000) {
+        showMessage("投稿內容不能超過 2000 字。");
+        return;
+      }
+
+      if (!agree.checked) {
         showMessage("請先閱讀並同意投稿提醒。");
         return;
       }
 
+      isSubmitting = true;
       button.disabled = true;
       button.textContent = "投稿處理中……";
       message.style.display = "none";
 
+      const controller = new AbortController();
+
+      const timeout = setTimeout(() => {
+        controller.abort();
+      }, 20000);
+
       try {
         const { error } = await supabase
           .from("messages")
-          .insert({ content: text });
+          .insert({
+            content: text
+          })
+          .abortSignal(controller.signal);
 
         if (error) {
-          console.error("Submission error:", error);
-          showMessage(
-            "投稿暫時無法送出，請稍後再試。"
+          console.error(
+            "投稿回應錯誤：",
+            error.code,
+            error.message
           );
+
+          showMessage(
+            "⚠️ 投稿結果尚未確認。資料可能已收到，請先不要重複投稿，並聯絡平台管理員確認。",
+            "warning"
+          );
+
+          lockForChecking();
           return;
         }
 
         showMessage(
-          "投稿已成功送出！目前狀態為待管理員審核。"
+          "✅ 投稿已成功送出！目前為待審核狀態，請等待管理員審核。",
+          "success"
         );
 
         form.reset();
         count.textContent = "0";
 
+        // 本次成功後鎖定按鈕，避免重複提交。
+        button.disabled = true;
+        button.textContent = "投稿已送出";
+
       } catch (error) {
-        console.error("Connection error:", error);
-        showMessage(
-          "目前無法連接投稿服務，請稍後再試。"
+        console.error(
+          "投稿連線異常：",
+          error
         );
+
+        showMessage(
+          "⚠️ 投稿結果尚未確認。可能發生網路中斷或請求逾時。請不要立即重新投稿，以免產生重複資料。",
+          "warning"
+        );
+
+        lockForChecking();
+
       } finally {
-        button.disabled = false;
-        button.textContent = "確認投稿";
+        clearTimeout(timeout);
+        isSubmitting = false;
+
+        if (!resultNeedsChecking &&
+            button.textContent !== "投稿已送出") {
+          button.disabled = false;
+          button.textContent = "確認投稿";
+        }
       }
     });
   </script>
+
 </body>
 </html>
