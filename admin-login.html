@@ -1,0 +1,385 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080f26">
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>管理員登入｜NN匿名</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 25px 16px;
+      font-family: -apple-system,
+        BlinkMacSystemFont,
+        "Noto Sans TC", sans-serif;
+      color: white;
+      background:
+        radial-gradient(
+          circle at 15% 15%,
+          #243e86,
+          transparent 40%
+        ),
+        radial-gradient(
+          circle at 85% 85%,
+          #40266c,
+          transparent 40%
+        ),
+        #080f26;
+    }
+
+    .container {
+      max-width: 430px;
+      margin: 65px auto;
+    }
+
+    .back {
+      display: inline-block;
+      color: #a9caff;
+      text-decoration: none;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    .card {
+      padding: 32px 24px;
+      border: 1px solid #ffffff25;
+      border-radius: 24px;
+      background: #ffffff0d;
+      box-shadow: 0 20px 60px #00000040;
+    }
+
+    .brand {
+      text-align: center;
+      color: #91b8ff;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .symbol {
+      width: 80px;
+      height: 80px;
+      margin: 25px auto;
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      font-size: 28px;
+      font-weight: 900;
+      background: linear-gradient(
+        135deg,
+        #297dff,
+        #7950e8
+      );
+      box-shadow: 0 12px 40px #3665ff55;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 26px;
+      margin: 10px 0;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #adbfdf;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin: 20px 0 9px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #52658e;
+      border-radius: 12px;
+      background: #101d3b;
+      color: white;
+      font: inherit;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #80adff;
+    }
+
+    input::placeholder {
+      color: #899abb;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 26px;
+      border: none;
+      border-radius: 14px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      background: linear-gradient(
+        135deg,
+        #297dff,
+        #7950e8
+      );
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    #message {
+      display: none;
+      padding: 14px;
+      margin-top: 20px;
+      border-radius: 12px;
+      background: #17294b;
+      color: #c9dcff;
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    #message.success {
+      background: #123d39;
+      color: #b7f9de;
+    }
+
+    #message.error {
+      background: #48232d;
+      color: #ffd4da;
+    }
+
+    .security {
+      text-align: center;
+      margin-top: 25px;
+      color: #9bb0d6;
+      font-size: 12px;
+      line-height: 1.9;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #899abb;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <a class="back" href="index.html">
+      ← 返回 NN匿名首頁
+    </a>
+
+    <div class="card">
+
+      <div class="brand">
+        NN ANONYMOUS
+      </div>
+
+      <div class="symbol">
+        NN
+      </div>
+
+      <h1>管理員登入</h1>
+
+      <p class="subtitle">
+        NN匿名｜後台管理系統<br>
+        僅限已授權的管理員使用
+      </p>
+
+      <form id="loginForm">
+
+        <label for="email">
+          管理員電子郵件
+        </label>
+
+        <input
+          type="email"
+          id="email"
+          placeholder="請輸入管理員 Email"
+          autocomplete="username"
+          required
+        >
+
+        <label for="password">
+          管理員密碼
+        </label>
+
+        <input
+          type="password"
+          id="password"
+          placeholder="請輸入密碼"
+          autocomplete="current-password"
+          required
+        >
+
+        <button type="submit" id="loginBtn">
+          安全登入
+        </button>
+
+        <div
+          id="message"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+      </form>
+
+      <div class="security">
+        🔒 使用 Supabase Auth 進行驗證<br>
+        登入後仍需通過管理員權限檢查
+      </div>
+
+    </div>
+
+    <footer>
+      © 2026 NN匿名<br>
+      獨立經營的匿名交流平台
+    </footer>
+
+  </div>
+
+  <script type="module">
+
+    import { createClient }
+      from "https://esm.sh/@supabase/supabase-js@2";
+
+    const SUPABASE_URL =
+      "https://skasotsajckswovqhbeo.supabase.co";
+
+    // 只使用可以公開的 Publishable Key
+    const SUPABASE_KEY =
+      "sb_publishable_k81-D28G-ipWmKVRwX2zpg_7y_xMvLX";
+
+    const supabase = createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY,
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: false
+        }
+      }
+    );
+
+    const form =
+      document.getElementById("loginForm");
+
+    const email =
+      document.getElementById("email");
+
+    const password =
+      document.getElementById("password");
+
+    const button =
+      document.getElementById("loginBtn");
+
+    const message =
+      document.getElementById("message");
+
+    function showMessage(text, type = "") {
+      message.style.display = "block";
+      message.className = type;
+      message.textContent = text;
+    }
+
+    form.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+        button.disabled = true;
+        button.textContent = "正在驗證身分……";
+        message.style.display = "none";
+
+        try {
+
+          // 第一步：驗證 Email 和密碼
+          const { error: loginError } =
+            await supabase.auth.signInWithPassword({
+              email: email.value.trim(),
+              password: password.value
+            });
+
+          if (loginError) {
+            showMessage(
+              "登入失敗，請確認管理員 Email、密碼及帳號驗證狀態。",
+              "error"
+            );
+            return;
+          }
+
+          button.textContent =
+            "正在確認管理員權限……";
+
+          // 第二步：透過資料庫函式確認身分
+          const { data: isAdmin, error: roleError } =
+            await supabase.rpc("is_nn_admin");
+
+          if (roleError || isAdmin !== true) {
+            await supabase.auth.signOut();
+
+            showMessage(
+              "帳號已登入，但管理員權限驗證未通過。請確認 Supabase 的管理員設定。",
+              "error"
+            );
+            return;
+          }
+
+          // 第三步：管理員驗證成功
+          showMessage(
+            "✅ 管理員身分驗證成功！NN匿名審核後台目前正在建置中。",
+            "success"
+          );
+
+          password.value = "";
+
+        } catch (error) {
+          console.error("登入流程異常：", error);
+
+          await supabase.auth.signOut()
+            .catch(() => {});
+
+          showMessage(
+            "目前無法完成登入驗證，請檢查網路連線後再試。",
+            "error"
+          );
+
+        } finally {
+          button.disabled = false;
+          button.textContent = "安全登入";
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
