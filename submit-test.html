@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>測試投稿｜NN匿名</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 50px 18px;
+      background: radial-gradient(circle at top left, #243e86, transparent 45%), #080f26;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+    }
+    main { max-width: 540px; margin: auto; }
+    .card {
+      background: #ffffff0d;
+      border: 1px solid #ffffff25;
+      border-radius: 22px;
+      padding: 28px 22px;
+    }
+    .logo { color: #91b8ff; font-weight: 800; letter-spacing: 2px; }
+    h1 { font-size: 27px; margin: 22px 0 10px; }
+    p { color: #bfcbe5; line-height: 1.8; }
+    .notice {
+      background: #1c3158;
+      padding: 14px;
+      border-radius: 12px;
+      margin: 22px 0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    label { display: block; margin-bottom: 10px; }
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 15px;
+      border: 1px solid #6989bc;
+      border-radius: 12px;
+      background: #101d38;
+      color: white;
+      font: inherit;
+      resize: vertical;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 18px;
+      border: 0;
+      border-radius: 12px;
+      background: #528af1;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .result { min-height: 24px; }
+    a { color: #a9c8ff; }
+    footer { text-align: center; margin-top: 30px; font-size: 12px; color: #9aa9c5; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="card">
+      <div class="logo">NN ANONYMOUS · TEST</div>
+      <h1>匿名投稿測試版</h1>
+      <p>你的想法，值得被聽見。</p>
+      <div class="notice">
+        🛠️ 目前為測試頁面。正式投稿系統仍在維護中。<br>
+        此頁僅供介面測試，內容不會傳送或儲存。
+      </div>
+      <form id="testForm">
+        <label for="message">匿名投稿內容</label>
+        <textarea id="message" maxlength="1000" required placeholder="請在這裡輸入想分享的內容……"></textarea>
+        <p id="count">0 / 1000 字</p>
+        <button type="submit">測試投稿（不會送出）</button>
+      </form>
+      <p id="result" class="result" role="status"></p>
+      <p><a href="index.html">← 返回 NN匿名首頁</a></p>
+    </section>
+    <footer>© 2026 NN匿名｜獨立經營的匿名交流平台</footer>
+  </main>
+  <script>
+    const message = document.getElementById("message");
+    const count = document.getElementById("count");
+    const result = document.getElementById("result");
+    message.addEventListener("input", () => {
+      count.textContent = Array.from(message.value).length + " / 1000 字";
+      result.textContent = "";
+    });
+    document.getElementById("testForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!message.value.trim()) {
+        result.textContent = "請先輸入投稿內容。";
+        return;
+      }
+      result.textContent = "✅ 介面測試成功！內容沒有送出或儲存。";
+    });
+  </script>
+</body>
+</html>
