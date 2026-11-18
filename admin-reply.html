@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080f26">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>小編回覆管理｜NN匿名</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root { color-scheme: dark; }
+    body { margin: 0; min-height: 100vh; color: #f5f8ff; background: radial-gradient(circle at 10% 10%,#244184 0, transparent 35%), radial-gradient(circle at 85% 90%,#423077 0,transparent 35%), #080f26; font-family: -apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif; }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 20px max(18px, calc((100vw - 880px)/2)); border-bottom: 1px solid #ffffff22; }
+    .brand { font-size: 22px; font-weight: 900; color: #b3d3ff; }
+    .sub { margin-top: 3px; font-size: 12px; letter-spacing: .07em; color: #b1c2e1; }
+    main { max-width: 880px; margin: auto; padding: 24px 16px 70px; }
+    h1 { margin: 4px 0 8px; font-size: clamp(23px,5vw,30px); }
+    h2 { margin: 0; font-size: 18px; }
+    p { line-height: 1.75; }
+    .muted { color: #b4c5e4; font-size: 14px; }
+    .panel { margin-top: 20px; padding: 18px; border-radius: 18px; background: #ffffff0d; border: 1px solid #ffffff24; }
+    .notice { padding: 14px 16px; border-radius: 12px; background: #193058; color: #e1ecff; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .toolbar strong { color: #a6c9ff; }
+    a { color: #a5caff; }
+    button, textarea { font: inherit; }
+    button, .link { background: #213c6b; border: 1px solid #5a79b6; border-radius: 12px; color: white; padding: 11px 15px; cursor: pointer; }
+    button.primary { background: linear-gradient(135deg,#267cff,#7750e7); border: 0; font-weight: 750; }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    textarea { width: 100%; min-height: 130px; resize: vertical; border: 1px solid #6378aa; border-radius: 13px; background: #111e3b; color: #fff; padding: 14px; line-height: 1.65; font-size: 16px; }
+    textarea:focus { outline: 2px solid #8db6ff; outline-offset: 2px; }
+    .entry { padding: 18px; margin-top: 16px; border-radius: 16px; border: 1px solid #ffffff2e; background: #101e3b; }
+    .entry-head { display: flex; gap: 9px; align-items: center; justify-content: space-between; flex-wrap: wrap; font-size: 13px; color: #b8c9e9; }
+    .content { padding: 14px 0 18px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
+    .number { margin: 9px 0; color: #b0cbff; font-weight: 700; }
+    label { display: block; margin: 9px 0; font-weight: 700; }
+    .actionrow { display:flex; gap: 10px; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+    .saved { font-size: 13px; color: #aedcc5; min-height: 20px; }
+    .empty { text-align: center; padding: 26px; color: #b1c3e2; }
+    #privateArea { display: none; }
+    footer { text-align: center; padding: 20px; font-size: 12px; color: #9cacd0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><div class="brand">NN匿名</div><div class="sub">EDITOR REPLY · V1.0</div></div>
+    <a href="admin-dashboard.html">返回審核後台</a>
+  </header>
+  <main>
+    <h1>小編回覆管理</h1>
+    <p class="muted">僅顯示已通過的投稿。回覆只儲存在資料庫，不會自動公開、發到 IG 或分配正式編號。</p>
+    <div id="notice" class="notice" role="status" aria-live="polite">🔐 正在驗證管理員身分……</div>
+    <div id="privateArea">
+      <div class="panel toolbar">
+        <span>已通過的投稿：<strong id="count">0</strong> 筆（最多顯示最新 50 筆）</span>
+        <button id="refresh" class="primary">重新整理</button>
+      </div>
+      <section class="panel">
+        <h2>已通過投稿與小編回覆</h2>
+        <div id="entries" class="empty">正在載入……</div>
+      </section>
+    </div>
+  </main>
+  <footer>© 2026 NN匿名 · 獨立經營的匿名交流平台</footer>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    // Supabase publishable key is intended for browser use. Never put service_role here.
+    const db = createClient(
+      "https://skasotsajckswovqhbeo.supabase.co",
+      "sb_publishable_k81-D28G-ipWmKVRwX2zpg_7y_xMvLX",
+      { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false } }
+    );
+    const notice = document.querySelector("#notice");
+    const area = document.querySelector("#privateArea");
+    const entries = document.querySelector("#entries");
+    const count = document.querySelector("#count");
+    const refresh = document.querySelector("#refresh");
+    let authorized = false;
+    let loading = false;
+    const setNotice = message => { notice.textContent = message; };
+    const timeText = value => {
+      const d = new Date(value);
+      return Number.isNaN(d.getTime()) ? "時間不明" : d.toLocaleString("zh-TW", { timeZone: "Asia/Taipei", hour12: false });
+    };
+    const append = (parent, tag, className, text) => {
+      const el = document.createElement(tag);
+      if (className) el.className = className;
+      if (text !== undefined) el.textContent = text;
+      parent.appendChild(el);
+      return el;
+    };
+    async function verifyAdmin() {
+      const { data, error } = await db.auth.getUser();
+      if (error || !data?.user) throw new Error("not_logged_in");
+      const { data: isAdmin, error: roleError } = await db.rpc("is_nn_admin");
+      if (roleError || isAdmin !== true) throw new Error("not_admin");
+      authorized = true;
+      area.style.display = "block";
+      setNotice("✅ 管理員驗證成功。可以撰寫及儲存小編回覆。");
+    }
+    async function load() {
+      if (!authorized || loading) return;
+      loading = true;
+      refresh.disabled = true;
+      entries.replaceChildren();
+      append(entries, "p", "empty", "正在讀取已通過投稿……");
+      try {
+        const { data, error } = await db.from("messages")
+          .select("id,content,status,editor_reply,post_number,created_at")
+          .eq("status", "approved")
+          .order("created_at", { ascending: false })
+          .limit(50);
+        if (error) throw error;
+        render(data || []);
+      } catch (error) {
+        console.error("載入小編回覆失敗", error);
+        entries.replaceChildren();
+        append(entries, "p", "empty", "讀取失敗，請確認登入狀態與資料庫權限。");
+        setNotice("⚠️ 目前無法載入已通過投稿。");
+      } finally {
+        loading = false;
+        refresh.disabled = false;
+      }
+    }
+    function render(items) {
+      entries.replaceChildren();
+      entries.className = "";
+      count.textContent = String(items.length);
+      if (!items.length) {
+        append(entries, "p", "empty", "目前沒有已通過的投稿。");
+        return;
+      }
+      for (const item of items) {
+        const article = append(entries, "article", "entry");
+        const head = append(article, "div", "entry-head");
+        append(head, "span", "", `投稿 #${item.id} · ${timeText(item.created_at)}`);
+        append(head, "span", "", "已通過");
+        append(article, "div", "content", item.content || "");
+        append(article, "div", "number", item.post_number == null ? "正式編號：尚未分配" : `正式編號：#NN匿名${String(item.post_number).padStart(4, "0")}`);
+        const label = append(article, "label", "", "小編回覆");
+        const editor = append(article, "textarea");
+        editor.id = `reply-${item.id}`;
+        label.setAttribute("for", editor.id);
+        editor.value = item.editor_reply || "";
+        editor.maxLength = 2000;
+        editor.placeholder = "輸入小編回覆……";
+        const actions = append(article, "div", "actionrow");
+        const saved = append(actions, "span", "saved", "尚未修改");
+        saved.setAttribute("role", "status");
+        const button = append(actions, "button", "primary", "儲存回覆");
+        editor.addEventListener("input", () => { saved.textContent = "尚未儲存"; });
+        button.addEventListener("click", async () => {
+          if (!authorized) return;
+          const reply = editor.value.trim();
+          if (!reply) { saved.textContent = "請先輸入回覆內容"; return; }
+          if (reply.length > 2000) { saved.textContent = "回覆字數不可超過 2000"; return; }
+          button.disabled = true;
+          saved.textContent = "儲存中……";
+          try {
+            const { data, error } = await db.from("messages")
+              .update({ editor_reply: reply })
+              .eq("id", item.id)
+              .eq("status", "approved")
+              .select("id,editor_reply");
+            if (error) throw error;
+            if (!data || data.length !== 1) {
+              saved.textContent = "未確認儲存成功，請重新整理檢查";
+            } else {
+              editor.value = data[0].editor_reply || reply;
+              saved.textContent = "✅ 已儲存（不會自動公開）";
+            }
+          } catch (error) {
+            console.error("儲存小編回覆失敗", error);
+            saved.textContent = "⚠️ 儲存失敗，請稍後重試";
+          } finally {
+            button.disabled = false;
+          }
+        });
+      }
+    }
+    refresh.addEventListener("click", load);
+    try {
+      await verifyAdmin();
+      await load();
+    } catch (error) {
+      console.error("管理員身分驗證失敗", error);
+      authorized = false;
+      area.style.display = "none";
+      setNotice(error?.message === "not_admin" ? "⛔ 此帳號沒有 NN匿名管理員權限。" : "🔒 請先登入管理員帳號。");
+      const login = append(notice, "a", "", " 前往管理員登入");
+      login.href = "admin-login.html";
+    }
+  </script>
+</body>
+</html>
