@@ -1,0 +1,107 @@
+
+name: NN匿名全站頁尾更新
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "選擇預覽或正式套用"
+        required: true
+        default: preview
+        type: choice
+        options:
+          - preview
+          - apply
+
+permissions:
+  contents: write
+
+jobs:
+  update-footer:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取得網站程式碼
+        uses: actions/checkout@v4
+
+      - name: 批次更新網頁
+        env:
+          MODE: ${{ inputs.mode }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          import re
+
+          credit = "本平台由黑熊工作室提供"
+
+          tracked = subprocess.check_output(
+              ["git", "ls-files", "-z"]
+          ).decode("utf-8").split("\0")
+
+          files = [
+              Path(name) for name in tracked
+              if name.endswith(".html")
+          ]
+
+          if not files:
+              raise SystemExit("找不到 HTML 檔案")
+
+          changed = 0
+
+          for path in files:
+              html = path.read_text(encoding="utf-8")
+
+              if credit in html:
+                  print("已存在，跳過:", path)
+                  continue
+
+              footers = list(re.finditer(
+                  r"</footer\s*>", html, re.I
+              ))
+
+              if footers:
+                  pos = footers[-1].start()
+                  addition = (
+                      "\n<div style='margin-top:8px;'>"
+                      + credit + "</div>\n"
+                  )
+              else:
+                  match = re.search(
+                      r"</body\s*>", html, re.I
+                  )
+                  if not match:
+                      raise SystemExit(
+                          f"缺少 body 結尾: {path}"
+                      )
+                  pos = match.start()
+                  addition = (
+                      "\n<footer style='text-align:center;"
+                      "padding:20px;color:#aab7ce;"
+                      "font-size:14px;'>"
+                      + credit + "</footer>\n"
+                  )
+
+              html = html[:pos] + addition + html[pos:]
+              path.write_text(html, encoding="utf-8")
+              print("準備更新:", path)
+              changed += 1
+
+          print("本次修改檔案數:", changed)
+          PY
+
+          git diff --check
+          git diff --stat
+          git diff -- '*.html'
+
+          if [ "$MODE" = "apply" ]; then
+            if ! git diff --quiet -- '*.html'; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git add -- '*.html'
+              git commit -m "Add Black Bear Studio footer credit"
+              git push origin HEAD:main
+            fi
+          else
+            echo "預覽模式：沒有提交或發布任何變更"
+          fi
