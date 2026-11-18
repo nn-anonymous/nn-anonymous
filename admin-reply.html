@@ -36,6 +36,12 @@
     label { display: block; margin: 9px 0; font-weight: 700; }
     .actionrow { display:flex; gap: 10px; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-top: 10px; }
     .saved { font-size: 13px; color: #aedcc5; min-height: 20px; }
+    .publish-block { margin-top: 14px; padding-top: 15px; border-top: 1px solid #ffffff24; }
+    .publish-desc { margin: 4px 0 12px; font-size: 13px; color: #c1cdea; line-height: 1.7; }
+    .publish-state { display: block; margin-top: 10px; min-height: 18px; color: #b5d9ff; font-size: 13px; }
+    .publish-button { background: #244c87; border: 1px solid #86a6e8; font-weight: 750; }
+    .publish-button:disabled { opacity: .45; }
+    .number.allocated { color: #b3f5ca; }
     .empty { text-align: center; padding: 26px; color: #b1c3e2; }
     #privateArea { display: none; }
     footer { text-align: center; padding: 20px; font-size: 12px; color: #9cacd0; }
@@ -43,12 +49,12 @@
 </head>
 <body>
   <header>
-    <div><div class="brand">NN匿名</div><div class="sub">EDITOR REPLY · V1.0</div></div>
+    <div><div class="brand">NN匿名</div><div class="sub">EDITOR REPLY · V1.1</div></div>
     <a href="admin-dashboard.html">返回審核後台</a>
   </header>
   <main>
     <h1>小編回覆管理</h1>
-    <p class="muted">僅顯示已通過的投稿。回覆只儲存在資料庫，不會自動公開、發到 IG 或分配正式編號。</p>
+    <p class="muted">僅顯示已通過的投稿。儲存回覆不會分配編號；按「準備發布」並再次確認後才會分配正式編號。所有操作都不會自動公開或發布到 IG。</p>
     <div id="notice" class="notice" role="status" aria-live="polite">🔐 正在驗證管理員身分……</div>
     <div id="privateArea">
       <div class="panel toolbar">
@@ -136,19 +142,67 @@
         append(head, "span", "", `投稿 #${item.id} · ${timeText(item.created_at)}`);
         append(head, "span", "", "已通過");
         append(article, "div", "content", item.content || "");
-        append(article, "div", "number", item.post_number == null ? "正式編號：尚未分配" : `正式編號：#NN匿名${String(item.post_number).padStart(4, "0")}`);
+        const numberDisplay = append(article, "div", "number", item.post_number == null ? "正式編號：尚未分配" : `正式編號：#NN匿名${String(item.post_number).padStart(4, "0")}`);
+        if (item.post_number != null) numberDisplay.classList.add("allocated");
         const label = append(article, "label", "", "小編回覆");
         const editor = append(article, "textarea");
         editor.id = `reply-${item.id}`;
         label.setAttribute("for", editor.id);
         editor.value = item.editor_reply || "";
+        let savedReply = (item.editor_reply || "").trim();
         editor.maxLength = 2000;
         editor.placeholder = "輸入小編回覆……";
         const actions = append(article, "div", "actionrow");
         const saved = append(actions, "span", "saved", "尚未修改");
         saved.setAttribute("role", "status");
         const button = append(actions, "button", "primary", "儲存回覆");
-        editor.addEventListener("input", () => { saved.textContent = "尚未儲存"; });
+        const publishBlock = append(article, "div", "publish-block");
+        append(publishBlock, "p", "publish-desc", "準備發布會永久分配下一個正式編號；不會發布網站貼文或 IG。測試投稿請勿操作。");
+        const publishButton = append(publishBlock, "button", "publish-button", item.post_number == null ? "準備發布・分配編號" : "已分配正式編號");
+        const publishState = append(publishBlock, "span", "publish-state", item.post_number == null ? "請先儲存小編回覆。" : "✅ 已取得正式編號，不會再次分配。");
+        publishState.setAttribute("role", "status");
+        const syncPublishButton = (showHint = true) => {
+          if (!showHint) { publishButton.disabled = !authorized || item.post_number != null || !savedReply || editor.value.trim() !== savedReply; return; }
+          publishButton.disabled = !authorized || item.post_number != null || !savedReply || editor.value.trim() !== savedReply;
+          if (item.post_number == null && !savedReply) publishState.textContent = "請先儲存小編回覆。";
+          else if (item.post_number == null && editor.value.trim() !== savedReply) publishState.textContent = "回覆已修改，請先儲存後再準備發布。";
+          else if (item.post_number == null) publishState.textContent = "已可準備發布。確認後會永久占用下一個編號。";
+        };
+        syncPublishButton();
+        editor.addEventListener("input", () => { saved.textContent = "尚未儲存"; syncPublishButton(); });
+        publishButton.addEventListener("click", async () => {
+          if (!authorized || item.post_number != null || !savedReply || editor.value.trim() !== savedReply) return;
+          if (!window.confirm(`確定要替投稿 #${item.id} 分配正式編號嗎？\n\n編號一旦分配便不會回收，且不會自動發布到 IG。\n\n測試投稿請按「取消」。`)) return;
+          publishButton.disabled = true;
+          button.disabled = true;
+          editor.disabled = true;
+          publishState.textContent = "正在驗證管理員並分配編號……";
+          try {
+            const { data, error } = await db.functions.invoke("dynamic-endpoint", { body: { message_id: item.id } });
+            if (error) {
+              let message = "無法分配編號，請重新整理確認狀態。";
+              try {
+                const response = await error.context?.json?.();
+                if (response && typeof response.message === "string") message = response.message;
+              } catch { /* keep generic message */ }
+              throw new Error(message);
+            }
+            if (!data || data.success !== true || !/^[1-9][0-9]*$/.test(String(data.post_number))) {
+              throw new Error("編號結果不正確，請重新整理後確認。");
+            }
+            item.post_number = String(data.post_number);
+            numberDisplay.textContent = `正式編號：#NN匿名${item.post_number.padStart(4, "0")}`;
+            numberDisplay.classList.add("allocated");
+            publishButton.textContent = "已分配正式編號";
+            publishState.textContent = "✅ 已準備發布；尚未公開或發布到 IG。";
+          } catch (error) {
+            publishState.textContent = `⚠️ ${error instanceof Error ? error.message : "編號分配失敗"}`;
+          } finally {
+            button.disabled = false;
+            editor.disabled = false;
+            syncPublishButton(false);
+          }
+        });
         button.addEventListener("click", async () => {
           if (!authorized) return;
           const reply = editor.value.trim();
@@ -167,6 +221,7 @@
               saved.textContent = "未確認儲存成功，請重新整理檢查";
             } else {
               editor.value = data[0].editor_reply || reply;
+              savedReply = editor.value.trim();
               saved.textContent = "✅ 已儲存（不會自動公開）";
             }
           } catch (error) {
@@ -174,6 +229,7 @@
             saved.textContent = "⚠️ 儲存失敗，請稍後重試";
           } finally {
             button.disabled = false;
+            syncPublishButton();
           }
         });
       }
