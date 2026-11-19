@@ -1,221 +1,253 @@
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080f26">
-  <meta name="description"
-        content="NN匿名｜匿名投稿平台">
-  <title>系統維護中｜NN匿名</title>
+  <meta name="description" content="NN匿名｜匿名投稿平台，分享想法與心聲，投稿經管理員審核後才會公開。">
+  <title>匿名投稿｜NN匿名</title>
+
+  <!-- Turnstile Site Key 為公開金鑰；不可在此放入 Secret Key。 -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
-      padding: 25px 16px;
-      font-family: -apple-system,
-        BlinkMacSystemFont,
-        "Noto Sans TC", sans-serif;
+      padding: 24px 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
       color: #ffffff;
       background:
-        radial-gradient(
-          circle at 15% 15%,
-          #243e86,
-          transparent 40%
-        ),
-        radial-gradient(
-          circle at 85% 85%,
-          #40266c,
-          transparent 40%
-        ),
+        radial-gradient(circle at 15% 15%, #243e86, transparent 40%),
+        radial-gradient(circle at 85% 85%, #40266c, transparent 40%),
         #080f26;
     }
-
-    .container {
-      width: 100%;
-      max-width: 560px;
-      margin: 65px auto;
-      text-align: center;
-    }
-
+    main { max-width: 560px; margin: 50px auto; }
     .card {
-      padding: 38px 24px;
+      padding: 32px 23px;
       border: 1px solid #ffffff25;
       border-radius: 24px;
       background: #ffffff0d;
       box-shadow: 0 15px 50px #00000035;
     }
-
     .logo {
-      color: #91b8ff;
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 2px;
-    }
-
-    .symbol {
-      width: 100px;
-      height: 100px;
-      margin: 25px auto;
-      display: grid;
-      place-items: center;
-      border-radius: 30px;
-      font-size: 38px;
-      font-weight: 900;
-      background: linear-gradient(
-        135deg,
-        #297dff,
-        #7950e8
-      );
-      box-shadow: 0 12px 45px #3665ff55;
-    }
-
-    .status {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 15px;
-      border: 1px solid #7185b8;
-      border-radius: 30px;
-      color: #c3d8ff;
-      background: #ffffff10;
-      font-size: 12px;
-      letter-spacing: 1px;
-    }
-
-    h1 {
-      font-size: clamp(26px, 7vw, 34px);
-      margin: 24px 0 15px;
-    }
-
-    .description {
-      color: #b5c4e3;
-      font-size: 15px;
-      line-height: 2;
-      margin: 20px auto 30px;
-    }
-
-    .notice {
-      text-align: left;
-      padding: 19px;
-      border: 1px solid #ffffff20;
-      border-radius: 16px;
-      background: #101d3b;
-      color: #c7d6f2;
-      font-size: 13px;
-      line-height: 1.9;
-      margin-bottom: 28px;
-    }
-
-    .button {
-      display: block;
-      width: 100%;
-      padding: 17px;
-      border-radius: 15px;
-      color: #fff;
-      text-decoration: none;
       font-size: 16px;
+      font-weight: 900;
+      color: #91b8ff;
+      letter-spacing: 1.5px;
+    }
+    h1 { font-size: clamp(26px, 7vw, 32px); margin: 20px 0 8px; }
+    .muted { color: #b5c4e3; line-height: 1.85; font-size: 14px; }
+    .notice {
+      margin: 23px 0 0;
+      padding: 18px;
+      border: 1px solid #ffffff20;
+      background: #15284d;
+      border-radius: 14px;
+      color: #dce7ff;
+      font-size: 13px;
+      line-height: 1.95;
+    }
+    .notice p { margin: 0 0 14px; }
+    .notice p:last-child { margin-bottom: 0; }
+    label { display: block; margin: 25px 0 10px; font-weight: 700; }
+    textarea {
+      width: 100%;
+      min-height: 170px;
+      padding: 16px;
+      border: 1px solid #53658d;
+      border-radius: 14px;
+      background: #101c3b;
+      color: #ffffff;
+      font: inherit;
+      line-height: 1.7;
+      resize: vertical;
+    }
+    textarea::placeholder { color: #9eaed1; }
+    textarea:focus { outline: 2px solid #528af1; outline-offset: 1px; }
+    .count { text-align: right; color: #aab9d8; font-size: 12px; margin-top: 8px; }
+    .verification { margin: 25px 0; min-height: 65px; }
+    button {
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #297dff, #7950e8);
+      color: #fff;
+      font: inherit;
       font-weight: 800;
-      background: linear-gradient(
-        135deg,
-        #297dff,
-        #7950e8
-      );
-      box-shadow: 0 10px 30px #3665ff35;
+      cursor: pointer;
     }
-
-    .subtext {
-      margin-top: 20px;
-      color: #93a8cc;
-      font-size: 12px;
-      line-height: 1.8;
-    }
-
-    footer {
-      margin-top: 35px;
-      color: #899abb;
-      font-size: 12px;
-      line-height: 1.9;
-    }
-
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    #result { margin-top: 18px; line-height: 1.8; min-height: 25px; white-space: pre-wrap; }
+    a { color: #a5c5ff; }
+    .back { margin-top: 25px; }
+    footer { text-align: center; margin-top: 35px; color: #8799bb; font-size: 12px; line-height: 1.9; }
     @media (max-width: 480px) {
-      .container {
-        margin-top: 35px;
-      }
-
-      .card {
-        padding: 30px 20px;
-      }
+      main { margin-top: 35px; }
+      .card { padding: 28px 20px; }
     }
   </style>
 </head>
 
 <body>
-
-  <main class="container">
-
+  <main>
     <section class="card">
+      <div class="logo">NN ANONYMOUS</div>
+      <h1>NN匿名｜匿名投稿</h1>
+      <p class="muted">你的想法，值得被聽見。</p>
 
-      <div class="logo">
-        NN ANONYMOUS
+      <div class="notice" aria-label="投稿及隱私須知">
+        <p>📝 <strong>投稿須知</strong><br>
+        投稿送出後將先進入管理員審核流程，不會立即公開；是否發布由平台依規則審核決定。請勿投稿騷擾、威脅、違法內容或他人的私人資料。</p>
+
+        <p>🔒 <strong>匿名與隱私保護</strong><br>
+        公開貼文不會顯示投稿者的來源 IP 或身分資料。為防止濫用與維護平台安全，系統會利用來源 IP 產生投稿頻率限制識別值，並記錄成功投稿時取得的來源 IP。請不要在投稿內容中填入自己的真實姓名、聯絡方式或其他敏感資料。</p>
+
+        <p>🛡️ <strong>IP 紀錄保存</strong><br>
+        來源 IP 紀錄預設保存 30 天，並由後端排程定期清理；僅限授權人員在必要範圍內存取。</p>
+
+        <p>⚖️ <strong>法律責任</strong><br>
+        匿名不代表免除法律責任。若涉及嚴重違法情事，平台得依法報案，並在符合法定要件及必要範圍內，配合警察或司法機關的合法調查程序。</p>
       </div>
 
-      <div class="symbol">
-        NN
-      </div>
+      <form id="submitForm">
+        <label for="content">匿名投稿內容</label>
+        <textarea id="content" maxlength="1000" minlength="5" required
+          placeholder="請輸入想分享的內容（5～1000 字），不要包含自己或他人的個人資料。"></textarea>
+        <div class="count"><span id="count">0</span> / 1000 字</div>
 
-      <div class="status">
-        SYSTEM MAINTENANCE
-      </div>
+        <div class="verification">
+          <div class="cf-turnstile"
+            data-sitekey="0x4AAAAAAGFnf3r2orE1Wvvf"
+            data-callback="turnstileSuccess"
+            data-expired-callback="turnstileExpired"
+            data-error-callback="turnstileError"></div>
+        </div>
 
-      <h1>
-        匿名投稿系統維護中
-      </h1>
+        <button id="submitButton" type="submit" disabled>完成機器人驗證後送出投稿</button>
+        <p id="result" role="status" aria-live="polite"></p>
+      </form>
 
-      <p class="description">
-        為了提供更安全、穩定的匿名投稿環境，
-        NN匿名目前正在進行系統升級與安全防護建置。
-        <br><br>
-        投稿功能暫時停止開放，
-        完成相關測試後將再行公告。
-      </p>
-
-      <div class="notice">
-        🛠️ <strong>目前維護項目</strong>
-        <br><br>
-        🛡️ 防機器人驗證機制
-        <br>
-        ⏱️ 投稿頻率限制
-        <br>
-        🔐 投稿資料安全防護
-        <br>
-        📋 管理員審核系統優化
-      </div>
-
-      <a class="button" href="index.html">
-        ← 返回 NN匿名首頁
-      </a>
-
-      <div class="subtext">
-        維護期間暫不接受新的匿名投稿。<br>
-        感謝你的理解與支持。
-      </div>
-
+      <p class="muted back"><a href="index.html">← 返回 NN匿名首頁</a></p>
     </section>
 
     <footer>
-      © 2026 NN匿名<br>
-      獨立經營的匿名交流平台<br>
+      © 2026 NN匿名｜獨立經營的匿名交流平台<br>
       非任何學校或官方機構所設立
-    <div style="margin-top:8px;">本平台由黑熊工作室提供</div>
+      <div style="margin-top:8px;">本平台由黑熊工作室提供</div>
     </footer>
-
   </main>
 
+  <script>
+    // 這是可公開的 Edge Function URL。切勿將 service_role、Turnstile Secret Key 放在前端。
+    const SUBMIT_API =
+      "https://skasotsajckswovqhbeo.supabase.co/functions/v1/nn-submit-message";
+
+    const content = document.getElementById("content");
+    const count = document.getElementById("count");
+    const button = document.getElementById("submitButton");
+    const result = document.getElementById("result");
+    const form = document.getElementById("submitForm");
+
+    let turnstileToken = "";
+    let submitting = false;
+
+    function updateButton() {
+      button.disabled = !turnstileToken || submitting;
+      button.textContent = submitting
+        ? "正在送出投稿…"
+        : turnstileToken
+          ? "送出匿名投稿"
+          : "完成機器人驗證後送出投稿";
+    }
+
+    function resetTurnstile() {
+      turnstileToken = "";
+      if (window.turnstile && typeof window.turnstile.reset === "function") {
+        window.turnstile.reset();
+      }
+      updateButton();
+    }
+
+    content.addEventListener("input", () => {
+      count.textContent = Array.from(content.value).length;
+      if (!submitting) result.textContent = "";
+    });
+
+    window.turnstileSuccess = function (token) {
+      turnstileToken = token || "";
+      updateButton();
+      if (!submitting) {
+        result.textContent = turnstileToken
+          ? "✅ 機器人驗證已完成，可以送出投稿。"
+          : "請完成機器人驗證。";
+      }
+    };
+
+    window.turnstileExpired = function () {
+      turnstileToken = "";
+      updateButton();
+      if (!submitting) result.textContent = "驗證已過期，請重新完成驗證。";
+    };
+
+    window.turnstileError = function () {
+      turnstileToken = "";
+      updateButton();
+      if (!submitting) result.textContent = "機器人驗證載入失敗，請稍後重試。";
+    };
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (submitting) return;
+
+      const message = content.value.trim();
+      const messageLength = Array.from(message).length;
+      if (messageLength < 5 || messageLength > 1000) {
+        result.textContent = "請輸入 5～1000 字的匿名投稿。";
+        return;
+      }
+      if (!turnstileToken) {
+        result.textContent = "請先完成機器人驗證。";
+        return;
+      }
+
+      submitting = true;
+      updateButton();
+      result.textContent = "正在送出投稿…";
+
+      try {
+        const response = await fetch(SUBMIT_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            content: message,
+            turnstileToken: turnstileToken
+          })
+        });
+
+        const data = await response.json().catch(() => null);
+        if (!response.ok || !data || data.success !== true) {
+          throw new Error(
+            data && typeof data.message === "string"
+              ? data.message
+              : "投稿失敗，請稍後再試。"
+          );
+        }
+
+        result.textContent = "✅ 匿名投稿已成功送出，等待管理員審核。\n審核通過前不會公開。";
+        content.value = "";
+        count.textContent = "0";
+      } catch (error) {
+        result.textContent = "❌ " + (
+          error instanceof Error ? error.message : "投稿失敗，請稍後再試。"
+        );
+      } finally {
+        submitting = false;
+        resetTurnstile();
+      }
+    });
+  </script>
 </body>
 </html>
