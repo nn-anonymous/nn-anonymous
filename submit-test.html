@@ -132,6 +132,7 @@
       margin-top: 18px;
       line-height: 1.7;
       min-height: 25px;
+      white-space: pre-wrap;
     }
 
     a {
@@ -150,29 +151,21 @@
 <body>
   <main>
     <section class="card">
-
-      <div class="logo">
-        NN ANONYMOUS · TEST
-      </div>
+      <div class="logo">NN ANONYMOUS · TEST</div>
 
       <h1>NN匿名｜測試投稿</h1>
-
-      <p class="muted">
-        你的想法，值得被聽見。
-      </p>
+      <p class="muted">你的想法，值得被聽見。</p>
 
       <div class="notice">
         🛠️ 目前為測試環境。<br>
         正式投稿系統仍在維護中。<br>
-        此頁僅供介面與驗證元件測試，
-        不會傳送、儲存或公開投稿內容。
+        此頁用於測試真正的投稿功能。<br>
+        測試內容會送入資料庫等待審核，不會自動公開。<br>
+        請勿輸入真實個人資料或敏感內容。
       </div>
 
       <form id="testForm">
-
-        <label for="content">
-          匿名投稿內容
-        </label>
+        <label for="content">匿名投稿內容</label>
 
         <textarea
           id="content"
@@ -186,7 +179,6 @@
         </div>
 
         <div class="verification">
-
           <div
             class="cf-turnstile"
             data-sitekey="0x4AAAAAAGFnf3r2orE1Wvvf"
@@ -194,110 +186,152 @@
             data-expired-callback="turnstileExpired"
             data-error-callback="turnstileError"
           ></div>
-
         </div>
 
-        <button
-          id="submitButton"
-          type="submit"
-          disabled
-        >
+        <button id="submitButton" type="submit" disabled>
           完成驗證後測試提交
         </button>
 
-        <p
-          id="result"
-          role="status"
-          aria-live="polite"
-        ></p>
-
+        <p id="result" role="status" aria-live="polite"></p>
       </form>
 
       <p class="muted">
-        <a href="index.html">
-          ← 返回 NN匿名首頁
-        </a>
+        <a href="index.html">← 返回 NN匿名首頁</a>
       </p>
-
     </section>
 
     <footer>
       © 2026 NN匿名｜獨立經營的匿名交流平台
-    <div style="margin-top:8px;">本平台由黑熊工作室提供</div>
+      <div style="margin-top:8px;">本平台由黑熊工作室提供</div>
     </footer>
   </main>
 
   <script>
+    // 只有測試用公開 API 位址；不要在前端放任何私人密鑰。
+    const SUBMIT_API =
+      "https://skasotsajckswovqhbeo.supabase.co/functions/v1/nn-submit-message";
+
     const content = document.getElementById("content");
     const count = document.getElementById("count");
     const button = document.getElementById("submitButton");
     const result = document.getElementById("result");
+    const form = document.getElementById("testForm");
 
-    let verified = false;
+    let turnstileToken = "";
+    let submitting = false;
 
     function updateButton() {
-      button.disabled = !verified;
-      button.textContent = verified
-        ? "測試提交（不會送出）"
-        : "完成驗證後測試提交";
+      button.disabled = !turnstileToken || submitting;
+      button.textContent = submitting
+        ? "正在送出測試投稿…"
+        : turnstileToken
+          ? "送出測試投稿（會儲存）"
+          : "完成驗證後測試提交";
+    }
+
+    function resetTurnstile() {
+      turnstileToken = "";
+      if (window.turnstile && typeof window.turnstile.reset === "function") {
+        window.turnstile.reset();
+      }
+      updateButton();
     }
 
     content.addEventListener("input", () => {
-      count.textContent =
-        Array.from(content.value).length;
-
-      result.textContent = "";
+      count.textContent = Array.from(content.value).length;
+      if (!submitting) result.textContent = "";
     });
 
-    window.turnstileSuccess = function(token) {
-      verified = Boolean(token);
+    window.turnstileSuccess = function (token) {
+      turnstileToken = token || "";
       updateButton();
 
-      result.textContent = verified
-        ? "✅ 驗證元件已完成，現在可以測試表單。"
-        : "請完成機器人驗證。";
+      if (!submitting) {
+        result.textContent = turnstileToken
+          ? "✅ 機器人驗證已完成，可以送出測試投稿。"
+          : "請完成機器人驗證。";
+      }
     };
 
-    window.turnstileExpired = function() {
-      verified = false;
+    window.turnstileExpired = function () {
+      turnstileToken = "";
       updateButton();
 
-      result.textContent =
-        "驗證已過期，請重新完成驗證。";
+      if (!submitting) {
+        result.textContent = "驗證已過期，請重新完成驗證。";
+      }
     };
 
-    window.turnstileError = function() {
-      verified = false;
+    window.turnstileError = function () {
+      turnstileToken = "";
       updateButton();
 
-      result.textContent =
-        "機器人驗證載入失敗，請稍後重試。";
+      if (!submitting) {
+        result.textContent = "機器人驗證載入失敗，請稍後重試。";
+      }
     };
 
-    document.getElementById("testForm")
-      .addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-        event.preventDefault();
+      if (submitting) return;
 
-        if (!verified) {
-          result.textContent =
-            "請先完成機器人驗證。";
-          return;
-        }
+      const message = content.value.trim();
 
-        const message = content.value.trim();
+      if (message.length < 5 || message.length > 1000) {
+        result.textContent = "請輸入 5～1000 字的測試投稿。";
+        return;
+      }
 
-        if (Array.from(message).length < 5) {
-          result.textContent =
-            "請至少輸入 5 個字。";
-          return;
+      if (!turnstileToken) {
+        result.textContent = "請先完成機器人驗證。";
+        return;
+      }
+
+      submitting = true;
+      updateButton();
+      result.textContent = "正在送出測試投稿…";
+
+      try {
+        const response = await fetch(SUBMIT_API, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            content: message,
+            turnstileToken: turnstileToken
+          })
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok || !data || data.success !== true) {
+          throw new Error(
+            data && typeof data.message === "string"
+              ? data.message
+              : "投稿失敗，請稍後再試。"
+          );
         }
 
         result.textContent =
-          "✅ 前端測試成功！" +
-          "內容未送出、未儲存。" +
-          "正式投稿功能仍在維護中。";
-      });
+          "✅ 測試投稿已送出，後端回報儲存成功，等待管理員審核。";
+
+        content.value = "";
+        count.textContent = "0";
+
+      } catch (error) {
+        result.textContent = "❌ " + (
+          error instanceof Error
+            ? error.message
+            : "投稿失敗，請稍後再試。"
+        );
+
+      } finally {
+        submitting = false;
+        resetTurnstile();
+      }
+    });
   </script>
 </body>
 </html>
