@@ -161,12 +161,14 @@
         你的想法，值得被聽見。
       </p>
 
-      <div class="notice">
-        🛠️ 目前為測試環境。<br>
-        正式投稿系統仍在維護中。<br>
-        此頁僅供介面與驗證元件測試，
-        不會傳送、儲存或公開投稿內容。
-      </div>
+     
+<div class="notice">
+  🛠 目前為測試環境。<br>
+  正式投稿系統仍在維護中。<br>
+  此頁用於測試真正的投稿功能。<br>
+  測試內容會送入資料庫等待審核，不會自動公開。
+</div>
+
 
       <form id="testForm">
 
@@ -238,7 +240,7 @@
     function updateButton() {
       button.disabled = !verified;
       button.textContent = verified
-        ? "測試提交（不會送出）"
+      ? "送出測試投稿（會儲存）"
         : "完成驗證後測試提交";
     }
 
@@ -293,10 +295,49 @@
           return;
         }
 
-        result.textContent =
-          "✅ 前端測試成功！" +
-          "內容未送出、未儲存。" +
-          "正式投稿功能仍在維護中。";
+        
+const token = window.turnstile?.getResponse?.();
+
+if (!token) {
+  result.textContent = "驗證已失效，請重新驗證。";
+  return;
+}
+
+button.disabled = true;
+result.textContent = "正在送出測試投稿…";
+
+fetch(
+  "https://skasotsajckswovqhbeo.supabase.co/functions/v1/nn-submit-message",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      content: message,
+      turnstileToken: token
+    })
+  }
+)
+.then(async (response) => {
+  const data = await response.json();
+
+  if (!response.ok || data.success !== true) {
+    throw new Error(data.message || "投稿失敗");
+  }
+
+  result.textContent =
+    "✅ 測試投稿已成功存入待審核資料庫。";
+})
+.catch((error) => {
+  result.textContent = "❌ " + error.message;
+})
+.finally(() => {
+  verified = false;
+  window.turnstile?.reset?.();
+  updateButton();
+});
+
       });
   </script>
 </body>
