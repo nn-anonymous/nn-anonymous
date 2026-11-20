@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080f26">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="description" content="NN匿名管理員統計儀表板">
+<title>管理員統計中心｜NN匿名 V1.2</title>
+<style>
+:root{color-scheme:dark;--bg:#080f26;--deep:#101d3a;--card:#142446;--edge:#ffffff29;--text:#f4f7ff;--muted:#aebddd;--accent:#80acff;--mint:#b5f1d4;--warn:#ffd397;--danger:#ffc0c4}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;background:radial-gradient(circle at 12% 0%,#23427d 0,transparent 32%),radial-gradient(circle at 85% 94%,#432e6a 0,transparent 40%),var(--bg)}
+button,input,select{font:inherit}a{color:#bdd6ff}a:hover{text-decoration:none}
+.top{border-bottom:1px solid var(--edge);background:#071126a8;backdrop-filter:blur(12px);padding:17px max(18px,calc((100vw - 1120px)/2));display:flex;gap:15px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.brand{font-weight:900;letter-spacing:.02em;font-size:25px;color:#c0d7ff}.brand small{display:block;font-size:11px;font-weight:700;letter-spacing:.13em;color:#93b6f1}
+nav{display:flex;flex-wrap:wrap;gap:9px 17px}nav a{text-decoration:none;font-size:13px;color:#d1e1ff}nav a.active{font-weight:800;color:#fff;border-bottom:2px solid #82abff}
+main{max-width:1120px;margin:auto;padding:33px 17px 80px}.eyebrow{letter-spacing:.14em;color:#a0c2ff;font-size:12px;font-weight:800}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}.hero h1{font-size:clamp(28px,5.5vw,43px);line-height:1.2;margin:8px 0 9px}.sub{color:var(--muted);font-size:14px;line-height:1.75;max-width:700px}.actions{display:flex;gap:9px;flex-wrap:wrap}
+button,.btn{padding:11px 16px;color:#f3f7ff;border:1px solid #5f7db4;border-radius:12px;background:#243e71;font-weight:750;cursor:pointer;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:6px;min-height:44px}
+button.primary,.btn.primary{border:0;background:linear-gradient(125deg,#287efa,#7452e6)}button.secondary{background:#172845}button:disabled{opacity:.55;cursor:not-allowed}button:hover:not(:disabled),.btn:hover{filter:brightness(1.15)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #b4d4ff;outline-offset:2px}
+.notice{border:1px solid #5679aa80;background:#193359;padding:15px 18px;border-radius:14px;margin:22px 0;color:#e2eafe;white-space:pre-wrap;overflow-wrap:anywhere}.notice.error{background:#4a293c;border-color:#b5687e}.notice.ok{background:#173e35;border-color:#498872}#workspace[hidden]{display:none}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-top:22px}.stat{padding:19px 17px;border-radius:17px;background:linear-gradient(145deg,#172b52 0%,#111d3c 100%);border:1px solid var(--edge);min-width:0}.stat label{display:block;font-size:12px;color:#b8cbec;font-weight:600}.stat strong{display:block;font-size:clamp(28px,5vw,39px);line-height:1.3;letter-spacing:-.03em;margin:7px 0 2px;font-variant-numeric:tabular-nums}.stat small{font-size:11px;color:#96b0d9}.stat .mint{color:var(--mint)}.stat .blue{color:#aacdff}.stat .violet{color:#d0bcff}
+.columns{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:start}.panel{background:#ffffff0c;border:1px solid var(--edge);border-radius:19px;padding:23px;margin-top:22px;min-width:0}.panel h2{font-size:19px;margin:0 0 4px}.panel p.lead{font-size:13px;color:var(--muted);margin:2px 0 18px}.panelhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.chart{height:216px;display:flex;align-items:flex-end;gap:12px;padding:10px 3px 0;border-bottom:1px solid #ffffff31}.chart-col{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}.chart-col strong{font-size:12px;color:#c5d9ff;font-variant-numeric:tabular-nums}.chart-col .bar-track{height:160px;width:100%;display:flex;align-items:flex-end;justify-content:center}.chart-col .bar{border-radius:9px 9px 3px 3px;width:min(100%,42px);background:linear-gradient(0deg,#375ad9,#8c73ff);min-height:3px}.chart-col small{font-size:11px;color:#a5badd;white-space:nowrap}.chart-col .today{color:#fff;font-weight:800}.empty{text-align:center;padding:20px;color:var(--muted)}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}.quick{display:flex;align-items:center;gap:10px;padding:15px 11px;border:1px solid #ffffff2a;background:#14264a;border-radius:13px;text-decoration:none;color:#eaf1ff;font-weight:750;font-size:13px}.quick .emoji{font-size:21px}
+.forms{display:grid;grid-template-columns:minmax(160px,2fr) minmax(110px,1fr) minmax(115px,1fr);gap:10px;margin-top:16px}.formitem label{display:block;font-size:12px;font-weight:750;color:#b8cbed;margin-bottom:6px}.formitem input,.formitem select{display:block;width:100%;min-width:0;padding:12px;border:1px solid #6a7eb3;background:#0e1b38;color:white;border-radius:11px;min-height:46px}.dates{display:flex;gap:10px;flex-wrap:wrap;margin:13px 0;align-items:flex-end}.dates .formitem{min-width:145px;flex:1}.searchActions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:15px 0 0}.resultInfo{font-size:13px;color:var(--muted);margin-top:18px}.items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.item{background:#122346;border:1px solid #ffffff2b;border-radius:15px;padding:17px;min-width:0}.itemhead{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}.item-title{font-size:15px;font-weight:850}.pill{font-size:11px;border-radius:30px;border:1px solid #7192c7;color:#d3e2ff;padding:3px 9px;white-space:nowrap}.pill.pending{color:#ffdeb0;border-color:#c99a55}.pill.approved{color:#b9f4ce;border-color:#60ad85}.pill.rejected{color:#ffc9d4;border-color:#b77a8b}.meta{color:#a8bcde;font-size:11px;margin-top:4px}.excerpt{font-size:14px;color:#f1f5ff;white-space:pre-wrap;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:13px 0}.reply{color:#b7d2fc}.item details{border-top:1px solid #ffffff26;margin-top:12px;padding-top:8px}.item summary{cursor:pointer;font-size:12px;color:#b9d5ff;font-weight:700}.fulltext{font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;padding:10px;background:#0b1733;border-radius:8px;margin:9px 0;color:#f1f4fd}.pager{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:19px;flex-wrap:wrap}.pager span{font-size:13px;color:var(--muted)}
+.activity{margin:13px 0 0;padding:0;list-style:none}.activity li{border-bottom:1px solid #ffffff18;display:flex;gap:10px;justify-content:space-between;font-size:12px;padding:12px 0;color:#deeaff}.activity li:last-child{border:0}.activity time{color:#a7b9da;white-space:nowrap}.foot{font-size:12px;color:#91a5c8;text-align:center;margin:42px auto 0;line-height:2;max-width:760px}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr}.items{grid-template-columns:1fr}}
+@media(max-width:520px){main{padding:23px 15px 60px}.top{padding:17px 16px}.panel{padding:16px}.stat{padding:14px}.stats{gap:9px}.forms{grid-template-columns:1fr 1fr}.forms .formitem:first-child{grid-column:span 2}.chart{gap:6px}.chart-col small{font-size:10px}.links{grid-template-columns:1fr 1fr}.quick{font-size:12px;padding:12px 9px}.quick .emoji{font-size:17px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">NN匿名<small>ADMIN ANALYTICS · V1.2</small></div>
+  <nav aria-label="管理員導覽">
+    <a class="active" aria-current="page" href="admin-stats.html">統計中心</a>
+    <a href="admin-dashboard.html">審核後台</a>
+    <a href="admin-reply.html">小編回覆</a>
+    <a href="admin-publish.html">發布中心</a>
+    <a href="posts.html">公開貼文牆</a>
+  </nav>
+</header>
+<main>
+  <div class="hero"><div><div class="eyebrow">NN ANONYMOUS · ADMIN ONLY</div><h1>營運統計中心</h1><div class="sub">查看投稿、審核、網站發布與 IG 工作台狀態。僅供已授權管理員使用；本頁只讀，不會自動審核、公開或更改任何投稿。</div></div><div class="actions"><button class="primary" id="reload" type="button" disabled>↻ 重新整理</button><button class="secondary" id="logout" type="button">登出</button></div></div>
+  <div class="notice" id="notice" role="status" aria-live="polite">🔐 正在驗證 NN匿名管理員身分……</div>
+  <section id="workspace" hidden>
+    <section class="stats" aria-label="全站主要統計">
+      <div class="stat"><label>累計投稿</label><strong class="blue" id="stat-total">—</strong><small>資料庫內全部投稿</small></div>
+      <div class="stat"><label>待審核</label><strong id="stat-pending">—</strong><small>等待管理員處理</small></div>
+      <div class="stat"><label>已通過</label><strong class="mint" id="stat-approved">—</strong><small>審核狀態 approved</small></div>
+      <div class="stat"><label>已拒絕</label><strong id="stat-rejected">—</strong><small>審核狀態 rejected</small></div>
+      <div class="stat"><label>已分配正式編號</label><strong id="stat-numbered">—</strong><small>已核發 #NN匿名 編號</small></div>
+      <div class="stat"><label>網站已公開</label><strong class="mint" id="stat-web">—</strong><small>公開投稿牆可讀取</small></div>
+      <div class="stat"><label>IG 待發布</label><strong class="violet" id="stat-igready">—</strong><small>管理員標記 ready</small></div>
+      <div class="stat"><label>IG 已標記發布</label><strong id="stat-igposted">—</strong><small>人工紀錄，非 IG API 確認</small></div>
+    </section>
+    <section class="columns">
+      <div class="panel"><div class="panelhead"><div><h2>近 7 天投稿趨勢</h2><p class="lead">以台灣時間（UTC+8）計算；每天顯示該日新增投稿數</p></div><span class="pill" id="weekTotal">本週 — 筆</span></div><div id="trend" class="chart" role="img" aria-label="近七天投稿數長條圖"><div class="empty">載入中……</div></div><p class="lead" style="margin:16px 0 0">審核通過率：<strong id="approveRate">—</strong>（已通過 ÷ 已處理投稿）</p></div>
+      <div class="panel"><h2>快速前往</h2><p class="lead">沿用 V1.1 已完成的管理流程</p><div class="links">
+        <a class="quick" href="admin-dashboard.html"><span class="emoji">📋</span>審核投稿</a>
+        <a class="quick" href="admin-reply.html"><span class="emoji">✍️</span>小編回覆</a>
+        <a class="quick" href="admin-publish.html"><span class="emoji">🌐</span>網站／IG 發布</a>
+        <a class="quick" href="posts.html"><span class="emoji">📣</span>公開投稿牆</a>
+      </div><p class="lead" style="margin:17px 0 0">管理員可查看完整投稿資料；本頁不載入、顯示或匯出來源 IP。</p></div>
+    </section>
+    <section class="panel" aria-labelledby="searchTitle"><div class="panelhead"><div><h2 id="searchTitle">投稿搜尋與篩選</h2><p class="lead">使用伺服器端查詢，全站搜尋，不限最新 50 筆。每頁最多顯示 20 筆。</p></div></div>
+      <form id="searchForm">
+        <div class="forms"><div class="formitem"><label for="keyword">搜尋關鍵字或編號</label><input id="keyword" type="search" placeholder="例如：小編回來、11、0001" maxlength="100" autocomplete="off"></div>
+          <div class="formitem"><label for="searchField">搜尋範圍</label><select id="searchField"><option value="content">匿名投稿內容</option><option value="editor_reply">小編回覆內容</option><option value="id">原投稿 ID</option><option value="post_number">正式編號（純數字）</option></select></div>
+          <div class="formitem"><label for="status">審核狀態</label><select id="status"><option value="all">全部狀態</option><option value="pending">待審核</option><option value="approved">已通過</option><option value="rejected">已拒絕</option></select></div>
+        </div>
+        <div class="dates"><div class="formitem"><label for="dateFrom">投稿日期（起）</label><input type="date" id="dateFrom"></div><div class="formitem"><label for="dateTo">投稿日期（迄）</label><input type="date" id="dateTo"></div></div>
+        <div class="searchActions"><button type="submit" class="primary" id="searchBtn">搜尋投稿</button><button type="button" class="secondary" id="clearBtn">清除條件</button></div>
+      </form><div id="searchStatus" role="status" class="resultInfo" aria-live="polite">準備讀取最新投稿……</div><div id="results" class="items"></div>
+      <div class="pager"><button id="prev" type="button" class="secondary" disabled>上一頁</button><span id="pageLabel">第 1 頁</span><button id="next" type="button" class="secondary" disabled>下一頁</button></div>
+    </section>
+    <section class="panel"><h2>最近網站／IG 管理紀錄</h2><p class="lead">由 V1.1 既有的授權 RPC 讀取發布操作；不包含投稿 IP。</p><ul class="activity" id="activity"><li>正在載入……</li></ul></section>
+  </section>
+  <div class="foot">© 2026 NN匿名 · 獨立經營的匿名交流平台 · 管理員專用<br>此頁僅顯示授權帳號可讀取的資料。請勿在 GitHub 原始碼加入密碼、service_role 或其他私密金鑰。</div>
+</main>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// Supabase publishable key 可放前端；管理員資料仍須依賴 Auth + 伺服器端 RLS。
+// 禁止將 Secret Key / service_role 金鑰放在此頁。
+const db = createClient('https://skasotsajckswovqhbeo.supabase.co',
+  'sb_publishable_k81-D28G-ipWmKVRwX2zpg_7y_xMvLX',
+  {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+const $ = id => document.getElementById(id);
+const store = {authorized:false,loading:false,searching:false,page:0,pageSize:20,count:0};
+const notice = $('notice');
+function noticeText(value, error=false){notice.textContent=value;notice.className='notice'+(error?' error':' ok')}
+function fmt(value){return typeof value==='number'?value.toLocaleString('zh-TW'):'—'}
+function time(value){if(!value)return '—';const d=new Date(value);return isNaN(d.valueOf())?'日期不明':d.toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false})}
+function pubLabel(value){return value==null?'尚未編號':'#NN匿名'+String(value).padStart(4,'0')}
+function ele(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
+function showCount(id,value){$(id).textContent=fmt(value)}
+function rate(a,b){if(typeof a!=='number'||typeof b!=='number')return '—';const n=a+b;return n?((100*a/n).toFixed(1)+'%'):'尚無已處理投稿'}
+function blockButton(on){$('reload').disabled=on||!store.authorized}
+async function adminCheck(){const{data,error}=await db.auth.getUser();if(error||!data?.user)throw new Error('請先登入管理員帳號');const result=await db.rpc('is_nn_admin');if(result.error||result.data!==true)throw new Error('這個帳號沒有 NN匿名管理員權限');store.authorized=true;$('workspace').hidden=false;blockButton(false);noticeText('✅ 已通過管理員驗證。以下統計從 Supabase 即時讀取，不會改動任何投稿。')}
+async function getCount(table,modify){let q=db.from(table).select('*',{count:'exact',head:true});if(modify)q=modify(q);const{count,error}=await q;if(error)throw error;return count??0}
+async function loadSummary(){const metrics=[
+['stat-total',()=>getCount('messages')],
+['stat-pending',()=>getCount('messages',q=>q.eq('status','pending'))],
+['stat-approved',()=>getCount('messages',q=>q.eq('status','approved'))],
+['stat-rejected',()=>getCount('messages',q=>q.eq('status','rejected'))],
+['stat-numbered',()=>getCount('messages',q=>q.not('post_number','is',null))],
+['stat-web',()=>getCount('nn_web_posts',q=>q.eq('status','published'))],
+['stat-igready',()=>getCount('nn_ig_queue',q=>q.eq('state','ready'))],
+['stat-igposted',()=>getCount('nn_ig_queue',q=>q.eq('state','posted'))]];
+ const data={};const res=await Promise.allSettled(metrics.map(x=>x[1]()));let errors=0;
+ metrics.forEach((m,i)=>{const value=res[i].status==='fulfilled'?res[i].value:null;showCount(m[0],value);data[m[0]]=value;if(value===null)errors++});
+ $('approveRate').textContent=rate(data['stat-approved'],data['stat-rejected']);return errors;
+}
+const day=24*60*60*1000;
+function taipeiDate(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Taipei',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const p={};for(const v of parts)if(v.type!=='literal')p[v.type]=Number(v.value);return Date.UTC(p.year,p.month-1,p.day)}
+async function loadTrend(){const today=taipeiDate();const days=Array.from({length:7},(_,i)=>today-(6-i)*day);
+ const results=await Promise.allSettled(days.map(utc=>getCount('messages',q=>q.gte('created_at',new Date(utc-8*3600000).toISOString()).lt('created_at',new Date(utc+day-8*3600000).toISOString()))));
+ const chart=$('trend');chart.replaceChildren();let total=0,good=0;const values=results.map(r=>{if(r.status==='fulfilled'){total+=r.value;good++;return r.value}return null});
+ const max=Math.max(1,...values.filter(x=>typeof x==='number'));const daynames=['日','一','二','三','四','五','六'];days.forEach((utc,i)=>{const date=new Date(utc);const val=values[i];const col=ele('div','chart-col');const number=ele('strong','',val===null?'—':String(val));const track=ele('div','bar-track');const bar=ele('div','bar');bar.style.height=(val===null?3:Math.max(3,Math.round(val/max*155)))+'px';bar.title=val===null?'查詢失敗':`${date.getUTCMonth()+1}/${date.getUTCDate()}：${val} 筆`;track.append(bar);const label=ele('small',i===6?'today':'',`${date.getUTCMonth()+1}/${date.getUTCDate()}`);col.append(number,track,label);chart.append(col)});
+ $('weekTotal').textContent=good===7?`近 7 天 ${total} 筆`:'近 7 天部分資料不可用';chart.setAttribute('aria-label',good===7?`最近七日新增投稿共 ${total} 筆`:'近七日資料部分讀取失敗');return good===7?0:1}
+const actionNames={'web.publish':'網站發布','web.hide':'網站下架','web.refresh':'更新網站貼文','web.auto_hide':'自動下架','ig.draft':'IG 草稿已儲存','ig.ready':'IG 標記待發布','ig.posted':'IG 人工標記已發布'};
+async function loadActivity(){const ul=$('activity');ul.replaceChildren();const{data,error}=await db.rpc('nn_recent_publication_activity',{p_limit:12});if(error){ul.append(ele('li','','目前無法載入發布紀錄（確認 V1.1 RPC 權限）。'));return 1}if(!data?.length){ul.append(ele('li','','目前還沒有發布操作紀錄。'));return 0}
+for(const row of data){const li=ele('li');const desc=ele('span','',`${pubLabel(row.post_number)} · ${actionNames[row.action]||row.action}`);const t=ele('time','',time(row.created_at));li.append(desc,t);ul.append(li)}return 0}
+function taipeiStartDate(v){const d=new Date(v+'T00:00:00+08:00');return Number.isNaN(d.getTime())?null:d}
+function resetPaging(){store.page=0}
+function pillClass(s){return ['pending','approved','rejected'].includes(s)?s:''}
+function statusName(s){return({pending:'待審核',approved:'已通過',rejected:'已拒絕'})[s]||'其他狀態'}
+function showItems(items){const host=$('results');host.replaceChildren();if(!items.length){host.append(ele('p','empty','目前沒有符合條件的投稿。'));return}
+for(const x of items){const article=ele('article','item');const head=ele('div','itemhead');head.append(ele('strong','item-title',`投稿 #${x.id} · ${pubLabel(x.post_number)}`),ele('span','pill '+pillClass(x.status),statusName(x.status)));article.append(head,ele('div','meta',time(x.created_at)));
+ const text=ele('p','excerpt',x.content??'');article.append(text);if(x.editor_reply){article.append(ele('p','excerpt reply','小編：'+x.editor_reply))}
+ const details=ele('details');details.append(ele('summary','','查看完整內容（管理員）'));details.append(ele('div','fulltext',x.content??''));if(x.editor_reply)details.append(ele('div','fulltext','小編：'+x.editor_reply));article.append(details);host.append(article)} }
+async function loadSearch(){if(!store.authorized||store.searching)return;store.searching=true;$('searchBtn').disabled=true;$('prev').disabled=true;$('next').disabled=true;$('searchStatus').textContent='正在查詢投稿……';
+ try{const value=$('keyword').value.trim(),field=$('searchField').value,status=$('status').value,from=$('dateFrom').value,to=$('dateTo').value;
+ if(value.length>100)throw new Error('搜尋內容不能超過 100 字');if((field==='id'||field==='post_number')&&value&&!/^\d{1,18}$/.test(value))throw new Error('搜尋 ID 或正式編號時，請輸入純數字');
+ if(from&&to&&from>to)throw new Error('起始日期不能晚於結束日期');
+ let q=db.from('messages').select('id,content,status,editor_reply,post_number,created_at',{count:'exact'});
+ if(status!=='all')q=q.eq('status',status);
+ if(value){if(field==='id'||field==='post_number')q=q.eq(field,value);else q=q.ilike(field,'%'+value.replace(/[\\%_]/g,'\\$&')+'%')}
+ if(from){const d=taipeiStartDate(from);if(!d)throw new Error('起始日期格式不正確');q=q.gte('created_at',d.toISOString())}
+ if(to){const d=taipeiStartDate(to);if(!d)throw new Error('結束日期格式不正確');q=q.lt('created_at',new Date(d.getTime()+day).toISOString())}
+ const lower=store.page*store.pageSize;q=q.order('created_at',{ascending:false}).order('id',{ascending:false}).range(lower,lower+store.pageSize-1);
+ const {data,error,count}=await q;if(error)throw error;store.count=count??0;const maxPage=Math.max(1,Math.ceil(store.count/store.pageSize));if(store.page>=maxPage&&store.page>0){store.page=maxPage-1;store.searching=false;return loadSearch()}
+ showItems(data??[]);$('searchStatus').textContent=`符合條件：${fmt(store.count)} 筆 · 本頁顯示 ${(data??[]).length} 筆`;$('pageLabel').textContent=`第 ${store.page+1} / ${maxPage} 頁`;
+ $('prev').disabled=store.page===0;$('next').disabled=store.page+1>=maxPage;
+ }catch(e){console.error('NN dashboard search error',e);$('results').replaceChildren(ele('div','empty','查詢失敗，請檢查搜尋條件或資料庫權限。'));$('searchStatus').textContent=(e?.message||'查詢失敗，請稍後再試。');$('pageLabel').textContent='—'}finally{store.searching=false;$('searchBtn').disabled=false}}
+async function refresh(){if(store.loading||!store.authorized)return;store.loading=true;blockButton(true);noticeText('正在更新管理員統計與搜尋資料……');try{const results=await Promise.all([loadSummary(),loadTrend(),loadActivity(),loadSearch()]);const warnings=results.slice(0,3).reduce((a,b)=>a+b,0);noticeText(warnings?'⚠️ 部分統計資料讀取失敗，未取得的數字已用「—」顯示，請檢查 RLS 權限。':'✅ 統計資訊已更新。投稿、回覆與發布狀態均未被修改。',warnings>0)}finally{store.loading=false;blockButton(false)}}
+$('reload').addEventListener('click',refresh);
+$('searchForm').addEventListener('submit',e=>{e.preventDefault();resetPaging();loadSearch()});
+$('clearBtn').addEventListener('click',()=>{$('searchForm').reset();resetPaging();loadSearch()});
+$('prev').addEventListener('click',()=>{if(store.page>0){store.page--;loadSearch()}});
+$('next').addEventListener('click',()=>{if((store.page+1)*store.pageSize<store.count){store.page++;loadSearch()}});
+$('logout').addEventListener('click',async()=>{if(!confirm('確定登出 NN匿名管理員帳號？其他管理頁面也將需要重新登入。'))return;await db.auth.signOut();window.location.href='admin-login.html'});
+try{await adminCheck();await refresh()}catch(e){console.error('NN dashboard admin verification failed',e);$('workspace').hidden=true;blockButton(true);notice.textContent='🔒 '+(e?.message||'無法驗證管理員身分')+'。請先登入管理員帳號。';notice.className='notice error';const a=ele('a','',' 前往管理員登入');a.href='admin-login.html';notice.append(a)}
+</script>
+</body>
+</html>
