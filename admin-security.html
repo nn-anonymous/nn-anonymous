@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080f26">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="NN匿名管理員專用安全統計中心。僅呈現 IP 紀錄的彙總數量，不顯示任何 IP 位址。">
+<title>IP 安全統計中心｜NN匿名 V1.3</title>
+<style>
+:root{color-scheme:dark;--bg:#080f26;--card:#142446;--edge:#ffffff29;--text:#f4f7ff;--muted:#b1c1dd;--accent:#80acff;--mint:#b5f1d4;--warn:#ffd397;--danger:#ffc0c4}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;background:radial-gradient(circle at 12% 0%,#23427d 0,transparent 32%),radial-gradient(circle at 85% 94%,#432e6a 0,transparent 40%),var(--bg)}
+a{color:#bdd6ff}a:hover{text-decoration:none}
+.top{border-bottom:1px solid var(--edge);background:#071126a8;backdrop-filter:blur(12px);padding:17px max(18px,calc((100vw - 1120px)/2));display:flex;gap:15px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.brand{font-weight:900;letter-spacing:.02em;font-size:25px;color:#c0d7ff}.brand small{display:block;font-size:11px;font-weight:700;letter-spacing:.13em;color:#93b6f1}
+nav{display:flex;flex-wrap:wrap;gap:9px 17px}nav a{text-decoration:none;font-size:13px;color:#d1e1ff}nav a.active{font-weight:800;color:#fff;border-bottom:2px solid #82abff}
+main{max-width:1120px;margin:auto;padding:33px 17px 80px}
+.eyebrow{letter-spacing:.14em;color:#a0c2ff;font-size:12px;font-weight:800}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}.hero h1{font-size:clamp(28px,5.5vw,43px);line-height:1.2;margin:8px 0 9px}.sub{color:var(--muted);font-size:14px;line-height:1.75;max-width:710px}
+.actions{display:flex;gap:9px;flex-wrap:wrap}button,.btn{padding:11px 16px;color:#f3f7ff;border:1px solid #5f7db4;border-radius:12px;background:#243e71;font:inherit;font-weight:750;cursor:pointer;text-decoration:none;display:inline-flex;justify-content:center;align-items:center;gap:6px;min-height:44px}button.primary{border:0;background:linear-gradient(125deg,#287efa,#7452e6)}button.secondary{background:#172845}button:disabled{opacity:.55;cursor:not-allowed}button:hover:not(:disabled),.btn:hover{filter:brightness(1.15)}button:focus-visible,a:focus-visible{outline:3px solid #b4d4ff;outline-offset:2px}
+.notice{border:1px solid #5679aa80;background:#193359;padding:15px 18px;border-radius:14px;margin:22px 0;color:#e2eafe;white-space:pre-wrap;overflow-wrap:anywhere}.notice.error{background:#4a293c;border-color:#b5687e}.notice.ok{background:#173e35;border-color:#498872}.notice.warn{background:#41331c;border-color:#a78a55}
+#workspace[hidden]{display:none}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-top:22px}.stat{padding:19px 17px;border-radius:17px;background:linear-gradient(145deg,#172b52 0%,#111d3c 100%);border:1px solid var(--edge);min-width:0}.stat label{display:block;font-size:12px;color:#b8cbec;font-weight:600}.stat strong{display:block;font-size:clamp(28px,5vw,39px);line-height:1.3;letter-spacing:-.03em;margin:7px 0 2px;font-variant-numeric:tabular-nums}.stat small{font-size:11px;color:#96b0d9}.stat .mint{color:var(--mint)}.stat .blue{color:#aacdff}.stat .violet{color:#d0bcff}.stat .warn{color:var(--warn)}
+.columns{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;align-items:start;margin-top:22px}.panel{background:#ffffff0c;border:1px solid var(--edge);border-radius:19px;padding:23px;min-width:0}.panel h2{font-size:19px;margin:0 0 7px}.panel p{font-size:13px;color:var(--muted);margin:7px 0;line-height:1.8}.row{display:flex;gap:10px;justify-content:space-between;align-items:baseline;border-bottom:1px solid #ffffff21;padding:12px 0;font-size:14px}.row:last-child{border:0}.row .value{font-weight:750;text-align:right}.pill{display:inline-block;font-size:11px;border-radius:30px;border:1px solid #7192c7;color:#d3e2ff;padding:3px 9px}.pill.good{color:var(--mint);border-color:#60ad85}.pill.caution{color:var(--warn);border-color:#c99a55}.list{padding-left:20px;margin:13px 0 0;color:#cbd7ed;font-size:13px;line-height:1.9}.foot{font-size:12px;color:#91a5c8;text-align:center;margin:42px auto 0;line-height:2;max-width:780px}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr}}
+@media(max-width:520px){main{padding:23px 15px 60px}.top{padding:17px 16px}.panel{padding:16px}.stat{padding:14px}.stats{gap:9px}.stat strong{font-size:29px}.actions{width:100%}.actions button{flex:1}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="brand">NN匿名<small>ADMIN SECURITY · V1.3</small></div>
+ <nav aria-label="管理員導覽">
+  <a class="active" aria-current="page" href="admin-security.html">安全統計</a>
+  <a href="admin-stats.html">統計中心</a>
+  <a href="admin-dashboard.html">投稿審核</a>
+  <a href="admin-reply.html">小編回覆</a>
+  <a href="admin-publish.html">網站／IG 發布</a>
+  <a href="nn-portal.html">快捷入口</a>
+ </nav>
+</header>
+<main>
+ <section class="hero">
+  <div><div class="eyebrow">NN ANONYMOUS · AUTHORIZED ADMIN ONLY</div><h1>IP 安全統計中心</h1><div class="sub">專門查看匿名投稿來源紀錄的保存狀態。此頁只顯示彙總數字，不提供原始 IP、地理定位或投稿者身分查詢，也不會修改或刪除任何資料。</div></div>
+  <div class="actions"><button class="primary" id="reload" type="button" disabled>↻ 重新整理</button><button class="secondary" id="logout" type="button">登出</button></div>
+ </section>
+ <div class="notice" id="notice" role="status" aria-live="polite">🔐 正在驗證 NN匿名管理員身分……</div>
+ <section id="workspace" hidden>
+  <section class="stats" aria-label="IP 安全統計">
+   <div class="stat"><label>IP 紀錄總數</label><strong class="blue" id="total">—</strong><small>來源 IP 紀錄筆數</small></div>
+   <div class="stat"><label>尚未到期</label><strong class="mint" id="active">—</strong><small>到期時間晚於現在</small></div>
+   <div class="stat"><label>已到期</label><strong id="expired">—</strong><small>尚未清理的到期紀錄</small></div>
+   <div class="stat"><label>未對應投稿</label><strong id="unmatched">—</strong><small>對應投稿不存在的紀錄</small></div>
+  </section>
+  <section class="columns">
+   <section class="panel">
+    <h2>資料完整性與保存狀態</h2>
+    <p>以下數字由 Supabase 的 <code>nn_ip_security_summary()</code> 安全函式即時回傳。</p>
+    <div class="row"><span>成功對應現有投稿</span><span class="value" id="linked">—</span></div>
+    <div class="row"><span>資料關聯檢查</span><span class="value" id="relation">—</span></div>
+    <div class="row"><span>到期紀錄提醒</span><span class="value" id="expiryState">—</span></div>
+    <div class="row"><span>資料更新時間（台灣）</span><span class="value" id="lastUpdated">—</span></div>
+   </section>
+   <aside class="panel">
+    <h2>匿名與隱私保護</h2>
+    <p><span class="pill good">唯讀 · 不顯示原始 IP</span></p>
+    <ul class="list">
+     <li>須通過 Supabase Auth 及管理員資格檢查。</li>
+     <li>資料由伺服器端 RPC 限制權限；網頁程式不含 service_role 金鑰。</li>
+     <li>本頁沒有查詢單筆 IP 或辨識投稿者的功能。</li>
+     <li>預定保存期限：30 天；到期清理由資料庫排程執行。</li>
+     <li>排程是否成功請依 Supabase 後台執行紀錄確認；本頁不直接監控排程。</li>
+    </ul>
+   </aside>
+  </section>
+ </section>
+ <div class="foot">© 2026 NN匿名 · 獨立經營的匿名交流平台 · 管理員專用<br>此頁不是投稿者身分識別系統。請勿在 GitHub 原始碼放入密碼或 Supabase Secret Key / service_role 金鑰。</div>
+</main>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// 只有公開 publishable key 可置於瀏覽器；真正的存取限制由 DB 函式再次驗證管理員。
+const db = createClient('https://skasotsajckswovqhbeo.supabase.co',
+  'sb_publishable_k81-D28G-ipWmKVRwX2zpg_7y_xMvLX',
+  {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+const $ = id => document.getElementById(id);
+const state = {authorized:false,busy:false};
+function showNotice(message,kind='ok'){$('notice').textContent=message;$('notice').className='notice '+kind}
+function count(value){return Number.isSafeInteger(Number(value)) && Number(value)>=0?Number(value):null}
+function num(value){return value===null?'—':value.toLocaleString('zh-TW')}
+function clearNumbers(){for(const id of ['total','active','expired','unmatched','linked'])$(id).textContent='—';$('relation').textContent='—';$('expiryState').textContent='—';$('lastUpdated').textContent='—'}
+async function verifyAdmin(){
+ const {data:auth,error:authErr}=await db.auth.getUser();
+ if(authErr||!auth?.user)throw new Error('尚未登入管理員帳號');
+ const {data:allowed,error:adminErr}=await db.rpc('is_nn_admin');
+ if(adminErr||allowed!==true)throw new Error('目前帳號沒有 NN匿名管理員權限');
+ state.authorized=true;
+}
+function lock(message){state.authorized=false;$('workspace').hidden=true;$('reload').disabled=true;clearNumbers();showNotice('🔒 '+message+'。請先登入已授權管理員帳號。','error');const a=document.createElement('a');a.href='admin-login.html';a.textContent=' 前往管理員登入';$('notice').append(a)}
+async function loadSummary(){
+ if(state.busy)return;
+ state.busy=true;$('reload').disabled=true;
+ try{
+  // 重新確認登入狀態；伺服器端 RPC 會再做一次資格檢查。
+  await verifyAdmin();
+  $('workspace').hidden=false;
+  showNotice('正在讀取安全統計……','ok');
+  const {data,error}=await db.rpc('nn_ip_security_summary');
+  if(error)throw new Error('無法讀取安全統計：'+error.message);
+  // RETURNS TABLE 的 RPC 會回傳單列陣列。
+  const result=Array.isArray(data)?data[0]:data;
+  if(!result)throw new Error('伺服器沒有回傳統計資料');
+  const fields={total:count(result.total_records),active:count(result.active_records),expired:count(result.expired_records),linked:count(result.linked_records),unmatched:count(result.unmatched_records)};
+  if(Object.values(fields).some(x=>x===null))throw new Error('伺服器回傳的統計格式不正確');
+  for(const [key,value] of Object.entries(fields))$(key).textContent=num(value);
+  const relationOK=fields.linked+fields.unmatched===fields.total;
+  $('relation').textContent=relationOK?'✅ 數量一致':'⚠️ 數量不一致';
+  $('expiryState').textContent=fields.expired>0?`⚠️ ${num(fields.expired)} 筆已到期，請檢查清理排程`:'✅ 目前無到期未清紀錄';
+  $('lastUpdated').textContent=new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false});
+  showNotice((fields.expired>0||!relationOK||fields.unmatched>0)?'⚠️ 已載入統計，但有需要留意的紀錄。請確認清理排程與資料關聯。':'✅ 安全統計已更新。沒有顯示任何真實 IP；資料未被修改。',(fields.expired>0||!relationOK||fields.unmatched>0)?'warn':'ok');
+ }catch(err){
+  console.error('NN security statistics failed',err);
+  clearNumbers();
+  if(!state.authorized){lock(err?.message||'驗證失敗')}
+  else {showNotice('⚠️ '+(err?.message||'資料讀取失敗')+'。確認 SQL 函式已建立且管理員有呼叫權限。','error')}
+ }finally{state.busy=false;$('reload').disabled=!state.authorized}
+}
+$('reload').addEventListener('click',loadSummary);
+$('logout').addEventListener('click',async()=>{if(!confirm('確定登出 NN匿名管理員帳號？其他管理頁面也將需要重新登入。'))return;await db.auth.signOut();window.location.href='admin-login.html'});
+db.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT')lock('管理員已登出')});
+await loadSummary();
+</script>
+</body>
+</html>
