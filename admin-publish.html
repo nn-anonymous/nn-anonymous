@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="zh-Hant">
 <head>
@@ -13,10 +12,38 @@
 a{color:#b7d4ff}header{border-bottom:1px solid var(--line);padding:18px max(16px,calc((100vw - 1050px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}header strong{font-size:23px;color:#c2d9ff}header small{display:block;letter-spacing:.1em;color:#9db6e0}nav{display:flex;gap:15px;flex-wrap:wrap}nav a{font-size:13px}main{max-width:1050px;margin:auto;padding:28px 16px 90px}.eyebrow{font-size:12px;color:#9cbeff;letter-spacing:.15em;font-weight:800}h1{font-size:clamp(26px,5vw,38px);margin:3px 0 12px;line-height:1.3}h2{font-size:20px;margin:0 0 10px}p{margin:8px 0}.muted{color:var(--muted);font-size:14px}.panel{background:#ffffff0c;border:1px solid var(--line);border-radius:19px;padding:20px;margin-top:20px}.notice{padding:15px;border-radius:13px;background:#18335d;border:1px solid #567cb25e;overflow-wrap:anywhere}.warn{background:#462c34;border-color:#a97a76}.success{background:#173f33;border-color:#507d6e}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:17px 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.stat{border:1px solid var(--line);border-radius:14px;padding:16px;background:#15274a}.stat b{display:block;font-size:28px;line-height:1.3}.stat span{font-size:12px;color:var(--muted)}button,input,textarea,select{font:inherit}button{border:1px solid #5a79b6;background:#223b69;border-radius:11px;padding:11px 15px;color:#fff;cursor:pointer;font-weight:700}button.primary{border:0;background:linear-gradient(120deg,#297dff,#7552e9)}button.danger{background:#4b2637;border:1px solid #aa5c76}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #9cc8ff;outline-offset:2px}input,textarea,select{border:1px solid #637cad;border-radius:11px;background:#0e1c3b;color:#fff;padding:12px;max-width:100%}input[type=search]{min-width:240px;flex:1}select{min-width:130px}textarea{width:100%;min-height:150px;resize:vertical;font-size:15px;line-height:1.65}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,455px),1fr));gap:16px;margin-top:18px}.post{padding:19px;border-radius:18px;background:#112044;border:1px solid #ffffff29;min-width:0}.post-top{display:flex;align-items:start;justify-content:space-between;gap:8px}.post-title{font-size:17px;font-weight:800}.pill{display:inline-flex;border:1px solid #6581b0;border-radius:30px;padding:2px 10px;color:#d6e6ff;font-size:12px;white-space:nowrap}.pill.live{border-color:#4eaf83;color:#a9f0d0}.post-content{white-space:pre-wrap;overflow-wrap:anywhere;border-left:3px solid #577cee;padding:8px 0 8px 13px;color:#f0f5ff;margin-top:13px;font-size:14px;max-height:200px;overflow:auto}.reply{color:#b5d5ff;border-left-color:#9e79ef}.buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}details{margin-top:16px;border-top:1px solid var(--line);padding-top:13px}summary{cursor:pointer;font-weight:750;color:#b8d4ff}label{display:block;margin:12px 0 5px;font-size:13px;font-weight:700}.helper{font-size:12px;color:#b7c9e8}.empty{padding:25px;text-align:center;color:var(--muted)}.activity{margin:0;padding-left:20px;font-size:13px;color:var(--muted)}.activity li{padding:5px 0}footer{text-align:center;color:#8aa2ca;font-size:12px;margin-top:45px}#workspace{display:none}#imageModal{display:none;position:fixed;inset:0;z-index:100;background:#000c;overflow:auto;padding:15px}#imageModal[aria-hidden=false]{display:flex;align-items:flex-start;justify-content:center}.modal-card{width:min(100%,600px);background:#102044;border:1px solid #678bc2;border-radius:18px;padding:16px;margin:20px auto}.modal-head{display:flex;gap:12px;align-items:center;justify-content:space-between}canvas{display:block;width:min(100%,420px);height:auto;margin:14px auto;box-shadow:0 8px 35px #0005}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:560px){.stats{grid-template-columns:repeat(3,1fr)}.stat{padding:10px}.stat b{font-size:22px}.panel{padding:14px}.post{padding:15px}input[type=search]{min-width:160px}header{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* NN匿名 V1.4.1｜統一管理員文字分頁（手機可左右滑動） */
+.nn-nav-shell{width:100%;max-width:1160px;margin:0 auto;padding:0 16px;box-sizing:border-box;border-bottom:1px solid rgba(164,193,245,.20);background:transparent}
+.nn-unified-nav{display:flex;flex-wrap:nowrap;gap:28px;align-items:stretch;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0;white-space:nowrap;max-width:100%}
+.nn-unified-nav::-webkit-scrollbar{display:none}
+.nn-unified-nav .nn-tab{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:54px;box-sizing:border-box;padding:12px 0 15px;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;color:#c6d5f2!important;text-decoration:none!important;font-size:16px;font-weight:550;line-height:1.3;letter-spacing:.01em;white-space:nowrap;transition:color .15s}
+.nn-unified-nav .nn-tab:hover,.nn-unified-nav .nn-tab:focus-visible{color:#fff!important}
+.nn-unified-nav .nn-tab:focus-visible{outline:2px solid #90b6ff;outline-offset:-2px}
+.nn-unified-nav .nn-tab[aria-current="page"]{color:#fff!important;font-weight:800}
+.nn-unified-nav .nn-tab[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:#8db4ff;border-radius:4px 4px 0 0;box-shadow:0 0 8px #8db4ff55}
+@media(max-width:600px){.nn-nav-shell{padding:0 14px}.nn-unified-nav{gap:23px}.nn-unified-nav .nn-tab{font-size:15px;min-height:49px;padding:12px 0}}
+
 </style>
 </head>
 <body>
-<header><div><strong>NN匿名</strong><small>PUBLISHING STUDIO · V1.2.1</small></div><nav aria-label="快速選單"><a href="admin-dashboard.html">審核後台</a><a href="admin-reply.html">小編回覆</a><a href="posts.html">公開貼文牆</a><a href="admin-login.html">管理員登入</a></nav></header>
+<header><div><strong>NN匿名</strong><small>PUBLISHING STUDIO · V1.2.1</small></div></header>
+<!-- NN匿名 V1.4.1 統一管理導覽：各頁面相同版型 -->
+<div class="nn-nav-shell"><nav class="nn-unified-nav" aria-label="NN匿名管理員導覽">
+  <a class="nn-tab" href="admin-dashboard.html">投稿審核</a>
+  <a class="nn-tab" href="admin-reply.html">小編回覆</a>
+  <a class="nn-tab" href="admin-publish.html" aria-current="page">網站／IG 發布</a>
+  <a class="nn-tab" href="admin-stats.html">統計中心</a>
+  <a class="nn-tab" href="admin-security.html">安全統計</a>
+  <a class="nn-tab" href="admin-portal.html">快捷中心</a>
+  <a class="nn-tab" href="posts.html">公開投稿</a>
+  <a class="nn-tab" href="reset-password.html">重設密碼</a>
+  <a class="nn-tab" href="https://github.com/nn-anonymous/nn-anonymous" target="_blank" rel="noopener noreferrer">GitHub</a>
+  <a class="nn-tab" href="https://github.com/nn-anonymous/nn-anonymous/settings/pages" target="_blank" rel="noopener noreferrer">網站部署</a>
+  <a class="nn-tab" href="https://supabase.com/dashboard/projects" target="_blank" rel="noopener noreferrer">Supabase</a>
+  <a class="nn-tab" href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare</a>
+</nav></div>
+
 <main>
 <p class="eyebrow">NN ANONYMOUS · ADMIN ONLY</p><h1>網站發布與 Instagram 貼文管理</h1>
 <p class="muted">沿用原本的審核和編號流程；只有審核通過、儲存回覆、取得正式編號的投稿才能操作。公開網站與 IG 各自獨立管理。</p>
