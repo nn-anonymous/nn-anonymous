@@ -27,20 +27,41 @@ main{max-width:1120px;margin:auto;padding:33px 17px 80px}
 @media(max-width:800px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr}}
 @media(max-width:520px){main{padding:23px 15px 60px}.top{padding:17px 16px}.panel{padding:16px}.stat{padding:14px}.stats{gap:9px}.stat strong{font-size:29px}.actions{width:100%}.actions button{flex:1}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* NN匿名 V1.4.1｜統一管理員文字分頁（手機可左右滑動） */
+.nn-nav-shell{width:100%;max-width:1160px;margin:0 auto;padding:0 16px;box-sizing:border-box;border-bottom:1px solid rgba(164,193,245,.20);background:transparent}
+.nn-unified-nav{display:flex;flex-wrap:nowrap;gap:28px;align-items:stretch;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0;white-space:nowrap;max-width:100%}
+.nn-unified-nav::-webkit-scrollbar{display:none}
+.nn-unified-nav .nn-tab{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;min-height:54px;box-sizing:border-box;padding:12px 0 15px;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;color:#c6d5f2!important;text-decoration:none!important;font-size:16px;font-weight:550;line-height:1.3;letter-spacing:.01em;white-space:nowrap;transition:color .15s}
+.nn-unified-nav .nn-tab:hover,.nn-unified-nav .nn-tab:focus-visible{color:#fff!important}
+.nn-unified-nav .nn-tab:focus-visible{outline:2px solid #90b6ff;outline-offset:-2px}
+.nn-unified-nav .nn-tab[aria-current="page"]{color:#fff!important;font-weight:800}
+.nn-unified-nav .nn-tab[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:#8db4ff;border-radius:4px 4px 0 0;box-shadow:0 0 8px #8db4ff55}
+@media(max-width:600px){.nn-nav-shell{padding:0 14px}.nn-unified-nav{gap:23px}.nn-unified-nav .nn-tab{font-size:15px;min-height:49px;padding:12px 0}}
+
 </style>
 </head>
 <body>
 <header class="top">
  <div class="brand">NN匿名<small>ADMIN SECURITY · V1.3</small></div>
- <nav aria-label="管理員導覽">
-  <a class="active" aria-current="page" href="admin-security.html">安全統計</a>
-  <a href="admin-stats.html">統計中心</a>
-  <a href="admin-dashboard.html">投稿審核</a>
-  <a href="admin-reply.html">小編回覆</a>
-  <a href="admin-publish.html">網站／IG 發布</a>
-  <a href="nn-portal.html">快捷入口</a>
- </nav>
+ 
 </header>
+<!-- NN匿名 V1.4.1 統一管理導覽：各頁面相同版型 -->
+<div class="nn-nav-shell"><nav class="nn-unified-nav" aria-label="NN匿名管理員導覽">
+  <a class="nn-tab" href="admin-dashboard.html">投稿審核</a>
+  <a class="nn-tab" href="admin-reply.html">小編回覆</a>
+  <a class="nn-tab" href="admin-publish.html">網站／IG 發布</a>
+  <a class="nn-tab" href="admin-stats.html">統計中心</a>
+  <a class="nn-tab" href="admin-security.html" aria-current="page">安全統計</a>
+  <a class="nn-tab" href="admin-portal.html">快捷中心</a>
+  <a class="nn-tab" href="posts.html">公開投稿</a>
+  <a class="nn-tab" href="reset-password.html">重設密碼</a>
+  <a class="nn-tab" href="https://github.com/nn-anonymous/nn-anonymous" target="_blank" rel="noopener noreferrer">GitHub</a>
+  <a class="nn-tab" href="https://github.com/nn-anonymous/nn-anonymous/settings/pages" target="_blank" rel="noopener noreferrer">網站部署</a>
+  <a class="nn-tab" href="https://supabase.com/dashboard/projects" target="_blank" rel="noopener noreferrer">Supabase</a>
+  <a class="nn-tab" href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare</a>
+</nav></div>
+
 <main>
  <section class="hero">
   <div><div class="eyebrow">NN ANONYMOUS · AUTHORIZED ADMIN ONLY</div><h1>IP 安全統計中心</h1><div class="sub">專門查看匿名投稿來源紀錄的保存狀態。此頁只顯示彙總數字，不提供原始 IP、地理定位或投稿者身分查詢，也不會修改或刪除任何資料。</div></div>
