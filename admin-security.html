@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#080f26">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="referrer" content="no-referrer">
-<meta name="description" content="NN匿名管理員專用安全統計中心。僅呈現 IP 紀錄的彙總數量，不顯示任何 IP 位址。">
-<title>IP 安全統計中心｜NN匿名 V1.3</title>
+<meta name="description" content="NN匿名管理員 IP 安全管理中心。提供統計、遮蔽紀錄及受控逐筆查閱。">
+<title>IP 安全管理中心｜NN匿名 V1.3.1</title>
 <style>
 :root{color-scheme:dark;--bg:#080f26;--card:#142446;--edge:#ffffff29;--text:#f4f7ff;--muted:#b1c1dd;--accent:#80acff;--mint:#b5f1d4;--warn:#ffd397;--danger:#ffc0c4}
 *{box-sizing:border-box}
@@ -39,11 +39,40 @@ main{max-width:1120px;margin:auto;padding:33px 17px 80px}
 .nn-unified-nav .nn-tab[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:#8db4ff;border-radius:4px 4px 0 0;box-shadow:0 0 8px #8db4ff55}
 @media(max-width:600px){.nn-nav-shell{padding:0 14px}.nn-unified-nav{gap:23px}.nn-unified-nav .nn-tab{font-size:15px;min-height:49px;padding:12px 0}}
 
+
+/* NN匿名 V1.3.1 逐筆安全查閱 */
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.records-panel{margin-top:22px}
+.records-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px}
+.records-head h2{margin-bottom:3px}
+.record-search{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.record-search input,.reveal-dialog textarea{background:#0d1d3e;border:1px solid #627bad;border-radius:11px;color:#fff;padding:11px 12px;font:inherit}
+.record-search input{width:128px;min-height:44px}
+.record-search button{padding:9px 12px;font-size:13px;min-height:44px}
+.record-help{font-size:13px;color:#a8c0e9;margin:12px 0!important}
+.record-list{display:grid;gap:10px;margin-top:14px}
+.record-item{border:1px solid #ffffff27;background:#101f42;border-radius:14px;padding:13px 15px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;min-width:0}
+.record-title{font-size:15px;font-weight:800;color:#e6efff;overflow-wrap:anywhere}
+.record-info{font-size:12px;color:#b5c8e7;line-height:1.85;overflow-wrap:anywhere;margin-top:4px}
+.record-ip{font:600 13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;color:#badcff;word-break:break-word}
+.record-item button{font-size:12px;padding:8px 10px;min-width:96px}
+.record-pager{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:15px;flex-wrap:wrap}
+.record-pager button{font-size:12px;padding:8px 11px}
+.record-state{font-size:13px;color:#bcd3ff;min-height:20px;margin-top:12px}
+.reveal-dialog{max-width:510px;width:calc(100% - 30px);padding:24px;border-radius:18px;border:1px solid #6f8fc6;color:#fff;background:#101f3d;box-shadow:0 18px 80px #000a}
+.reveal-dialog::backdrop{background:#020918d9}
+.reveal-dialog h2{font-size:21px;margin:0 0 8px}
+.reveal-dialog p{font-size:13px;color:#d1e0fb;line-height:1.75}
+.reveal-dialog label{font-size:13px;color:#e5efff;display:block;margin:14px 0 7px}
+.reveal-dialog textarea{width:100%;min-height:104px;resize:vertical}
+.reveal-dialog .dialog-actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap;margin-top:15px}
+.reveal-value{padding:12px;border:1px solid #ffc66a88;border-radius:11px;background:#45351b;color:#ffe9bd;font:700 16px/1.5 ui-monospace,monospace;overflow-wrap:anywhere;margin-top:12px}
+@media(max-width:550px){.record-search{width:100%}.record-search input{flex:1;min-width:105px;width:auto}.record-item{grid-template-columns:1fr}.record-item button{width:100%}.records-panel{padding:16px}.reveal-dialog{padding:18px}}
 </style>
 </head>
 <body>
 <header class="top">
- <div class="brand">NN匿名<small>ADMIN SECURITY · V1.3</small></div>
+ <div class="brand">NN匿名<small>ADMIN SECURITY · V1.3.1</small></div>
  
 </header>
 <!-- NN匿名 V1.4.1 統一管理導覽：各頁面相同版型 -->
@@ -64,7 +93,7 @@ main{max-width:1120px;margin:auto;padding:33px 17px 80px}
 
 <main>
  <section class="hero">
-  <div><div class="eyebrow">NN ANONYMOUS · AUTHORIZED ADMIN ONLY</div><h1>IP 安全統計中心</h1><div class="sub">專門查看匿名投稿來源紀錄的保存狀態。此頁只顯示彙總數字，不提供原始 IP、地理定位或投稿者身分查詢，也不會修改或刪除任何資料。</div></div>
+  <div><div class="eyebrow">NN ANONYMOUS · AUTHORIZED ADMIN ONLY</div><h1>IP 安全管理中心</h1><div class="sub">查看投稿來源紀錄及保存狀態。列表僅顯示遮蔽 IP；完整 IP 僅限經授權的單筆安全事件查閱，並記錄管理員身分、時間與查閱原因。</div></div>
   <div class="actions"><button class="primary" id="reload" type="button" disabled>↻ 重新整理</button><button class="secondary" id="logout" type="button">登出</button></div>
  </section>
  <div class="notice" id="notice" role="status" aria-live="polite">🔐 正在驗證 NN匿名管理員身分……</div>
@@ -86,17 +115,51 @@ main{max-width:1120px;margin:auto;padding:33px 17px 80px}
    </section>
    <aside class="panel">
     <h2>匿名與隱私保護</h2>
-    <p><span class="pill good">唯讀 · 不顯示原始 IP</span></p>
+    <p><span class="pill good">遮蔽顯示 · 完整查閱留痕</span></p>
     <ul class="list">
      <li>須通過 Supabase Auth 及管理員資格檢查。</li>
      <li>資料由伺服器端 RPC 限制權限；網頁程式不含 service_role 金鑰。</li>
-     <li>本頁沒有查詢單筆 IP 或辨識投稿者的功能。</li>
+     <li>可依投稿 ID 查詢；完整 IP 須提供原因，系統會記錄管理員查閱行為。</li>
      <li>預定保存期限：30 天；到期清理由資料庫排程執行。</li>
      <li>排程是否成功請依 Supabase 後台執行紀錄確認；本頁不直接監控排程。</li>
     </ul>
    </aside>
   </section>
+
+  <section class="panel records-panel" aria-labelledby="recordHeading">
+   <div class="records-head">
+    <div><h2 id="recordHeading">投稿來源紀錄</h2><p>僅顯示尚在保存期限內的紀錄。以投稿 ID 查找，不顯示投稿者姓名或 IG。</p></div>
+    <form class="record-search" id="recordSearch" autocomplete="off">
+     <label for="recordId" class="visually-hidden">投稿 ID</label>
+     <input id="recordId" type="number" min="1" step="1" placeholder="投稿 ID" inputmode="numeric">
+     <button type="submit" class="primary">查詢</button>
+     <button type="button" id="clearRecordSearch" class="secondary">全部</button>
+    </form>
+   </div>
+   <p class="record-help">IP 預設遮蔽；「查看完整 IP」僅用於有必要的安全事件，須填寫原因並留下稽核紀錄。IP 不能直接確認投稿者的真實身分。</p>
+   <div id="recordState" class="record-state" role="status" aria-live="polite">準備載入紀錄……</div>
+   <div id="recordList" class="record-list" aria-label="投稿來源紀錄清單"></div>
+   <div class="record-pager">
+    <button id="recordPrev" type="button" class="secondary" disabled>上一頁</button>
+    <span id="recordPage" class="small">第 1 頁</span>
+    <button id="recordNext" type="button" class="secondary" disabled>下一頁</button>
+   </div>
+  </section>
  </section>
+ <dialog id="ipRevealDialog" class="reveal-dialog" aria-labelledby="dialogTitle">
+  <h2 id="dialogTitle">單筆完整 IP 安全查閱</h2>
+  <p id="dialogIntro">請確認這次查閱是為了處理具體安全事件，不得用於猜測、公開或騷擾匿名投稿者。</p>
+  <form id="revealForm">
+   <label for="revealReason">查閱原因（10～200 字）</label>
+   <textarea id="revealReason" minlength="10" maxlength="200" placeholder="例如：此投稿涉及具體的威脅或騷擾事件，需要依法保全紀錄。" required></textarea>
+   <div class="record-state" id="revealStatus" role="status" aria-live="polite"></div>
+   <div class="reveal-value" id="revealedIP" hidden></div>
+   <div class="dialog-actions">
+    <button type="button" id="closeReveal" class="secondary">關閉</button>
+    <button type="submit" id="confirmReveal" class="primary">記錄原因並查閱</button>
+   </div>
+  </form>
+ </dialog>
  <div class="foot">
   © 2026 NN匿名 · V1.4 · 管理員專用<br>
 本平台由黑熊工作室提供
@@ -121,7 +184,7 @@ async function verifyAdmin(){
  if(adminErr||allowed!==true)throw new Error('目前帳號沒有 NN匿名管理員權限');
  state.authorized=true;
 }
-function lock(message){state.authorized=false;$('workspace').hidden=true;$('reload').disabled=true;clearNumbers();showNotice('🔒 '+message+'。請先登入已授權管理員帳號。','error');const a=document.createElement('a');a.href='admin-login.html';a.textContent=' 前往管理員登入';$('notice').append(a)}
+function lock(message){state.authorized=false;if(typeof closeIpDialog==='function')closeIpDialog();if(typeof emptyRecordList==='function')emptyRecordList();$('workspace').hidden=true;$('reload').disabled=true;clearNumbers();showNotice('🔒 '+message+'。請先登入已授權管理員帳號。','error');const a=document.createElement('a');a.href='admin-login.html';a.textContent=' 前往管理員登入';$('notice').append(a)}
 async function loadSummary(){
  if(state.busy)return;
  state.busy=true;$('reload').disabled=true;
@@ -142,7 +205,7 @@ async function loadSummary(){
   $('relation').textContent=relationOK?'✅ 數量一致':'⚠️ 數量不一致';
   $('expiryState').textContent=fields.expired>0?`⚠️ ${num(fields.expired)} 筆已到期，請檢查清理排程`:'✅ 目前無到期未清紀錄';
   $('lastUpdated').textContent=new Date().toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false});
-  showNotice((fields.expired>0||!relationOK||fields.unmatched>0)?'⚠️ 已載入統計，但有需要留意的紀錄。請確認清理排程與資料關聯。':'✅ 安全統計已更新。沒有顯示任何真實 IP；資料未被修改。',(fields.expired>0||!relationOK||fields.unmatched>0)?'warn':'ok');
+  showNotice((fields.expired>0||!relationOK||fields.unmatched>0)?'⚠️ 已載入統計，但有需要留意的紀錄。請確認清理排程與資料關聯。':'✅ 安全統計已更新。列表不顯示完整 IP，資料未被修改。',(fields.expired>0||!relationOK||fields.unmatched>0)?'warn':'ok');
  }catch(err){
   console.error('NN security statistics failed',err);
   clearNumbers();
@@ -150,10 +213,115 @@ async function loadSummary(){
   else {showNotice('⚠️ '+(err?.message||'資料讀取失敗')+'。確認 SQL 函式已建立且管理員有呼叫權限。','error')}
  }finally{state.busy=false;$('reload').disabled=!state.authorized}
 }
-$('reload').addEventListener('click',loadSummary);
+$('reload').addEventListener('click',async()=>{await loadSummary();await loadIpList();});
 $('logout').addEventListener('click',async()=>{if(!confirm('確定登出 NN匿名管理員帳號？其他管理頁面也將需要重新登入。'))return;await db.auth.signOut();window.location.href='admin-login.html'});
 db.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT')lock('管理員已登出')});
+
+// NN匿名 V1.3.1：只經受控 RPC 存取 IP，瀏覽器不直接查閱私有資料表。
+const recordState = { page:0, pageSize:20, searchId:null, loading:false, selectedId:null, revealBusy:false };
+function formatTW(value) {
+ if (!value) return '時間不明';
+ const dt=new Date(value);
+ return Number.isNaN(dt.getTime())?'時間不明':dt.toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false});
+}
+function safeStatus(value) {
+ return ({pending:'待審核',approved:'已通過',rejected:'已拒絕'})[value]||'其他狀態';
+}
+function setRecordState(message){$('recordState').textContent=message}
+function makeElement(tag,cls,txt){const x=document.createElement(tag);if(cls)x.className=cls;if(txt!==undefined)x.textContent=String(txt);return x}
+function emptyRecordList(){ $('recordList').replaceChildren(); $('recordPrev').disabled=true; $('recordNext').disabled=true; }
+async function loadIpList(){
+ if (!state.authorized||recordState.loading) return;
+ recordState.loading=true;
+ $('recordPrev').disabled=true; $('recordNext').disabled=true;
+ setRecordState('正在讀取遮蔽後的來源紀錄……');
+ try {
+  const params={p_limit:recordState.pageSize,p_offset:recordState.page*recordState.pageSize,p_message_id:recordState.searchId};
+  const {data,error}=await db.rpc('nn_ip_security_list',params);
+  if(error)throw error;
+  if(!state.authorized)return;
+  const rows=Array.isArray(data)?data:[];
+  $('recordList').replaceChildren();
+  if(rows.length===0){setRecordState('目前沒有符合條件、且尚未到期的來源紀錄。');}
+  else{
+   setRecordState(`已載入 ${rows.length} 筆遮蔽後的來源紀錄。`);
+   for(const row of rows){
+    const item=makeElement('article','record-item');
+    const left=makeElement('div');
+    const id=String(row.message_id);
+    const publishNum=row.post_number==null?'':` · 正式編號 #NN匿名${String(row.post_number).padStart(4,'0')}`;
+    left.append(makeElement('div','record-title',`投稿 ID #${id}${publishNum}`));
+    left.append(makeElement('div','record-info',`狀態：${safeStatus(row.message_status)}｜紀錄：${formatTW(row.recorded_at)}｜到期：${formatTW(row.expires_at)}`));
+    left.append(makeElement('div','record-ip',`遮蔽 IP：${row.masked_ip||'—'}`));
+    const button=makeElement('button','secondary','查看完整 IP');
+    button.type='button';button.addEventListener('click',()=>openIpDialog(id));
+    item.append(left,button);$('recordList').append(item);
+   }
+  }
+  $('recordPage').textContent=`第 ${recordState.page+1} 頁`;
+  $('recordPrev').disabled=recordState.page===0 || recordState.searchId!==null;
+  $('recordNext').disabled=rows.length<recordState.pageSize || recordState.searchId!==null;
+ }catch(err){
+  emptyRecordList();
+  setRecordState('⚠️ 無法讀取來源紀錄。請先確認已安裝 V1.3.1 SQL，且帳號具有管理員權限。');
+  console.error('NN masked IP list failed',err?.code||'error');
+ }finally { recordState.loading=false; }
+}
+function closeIpDialog(){
+ const d=$('ipRevealDialog');if(d.open)d.close();
+ $('revealedIP').textContent='';$('revealedIP').hidden=true;
+ $('revealReason').value='';$('revealStatus').textContent='';
+ recordState.selectedId=null;
+}
+function openIpDialog(messageId){
+ if(!state.authorized)return;
+ closeIpDialog();
+ recordState.selectedId=messageId;
+ $('dialogIntro').textContent=`投稿 ID #${messageId}：請確認有具體安全事件及正當必要，並填寫原因。查閱操作會被記錄。`;
+ $('ipRevealDialog').showModal();
+ $('revealReason').focus();
+}
+$('recordSearch').addEventListener('submit',async e=>{
+ e.preventDefault();
+ const raw=$('recordId').value.trim();
+ if(raw&&!/^\d+$/.test(raw)){setRecordState('請輸入正確的投稿 ID。');return}
+ const value=raw?Number(raw):null;
+ if(value!==null&&(!Number.isSafeInteger(value)||value<=0)){setRecordState('投稿 ID 不正確。');return}
+ recordState.searchId=value;recordState.page=0;await loadIpList();
+});
+$('clearRecordSearch').addEventListener('click',async()=>{$('recordId').value='';recordState.searchId=null;recordState.page=0;await loadIpList()});
+$('recordPrev').addEventListener('click',async()=>{if(recordState.page>0){recordState.page--;await loadIpList()}});
+$('recordNext').addEventListener('click',async()=>{recordState.page++;await loadIpList()});
+$('closeReveal').addEventListener('click',closeIpDialog);
+$('ipRevealDialog').addEventListener('close',()=>{
+ $('revealedIP').textContent='';$('revealedIP').hidden=true;
+ $('revealStatus').textContent='';$('revealReason').value='';recordState.selectedId=null;
+});
+$('revealForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(recordState.revealBusy||!state.authorized||!recordState.selectedId)return;
+ const reason=$('revealReason').value.trim();
+ if(reason.length<10||reason.length>200){$('revealStatus').textContent='請填寫 10～200 字的具體查閱原因。';return}
+ recordState.revealBusy=true; $('confirmReveal').disabled=true; $('revealStatus').textContent='正在驗證權限並記錄查閱原因……';
+ $('revealedIP').textContent='';$('revealedIP').hidden=true;
+ try{
+  const targetId=recordState.selectedId;
+  const {data,error}=await db.rpc('nn_ip_security_reveal',{p_message_id:targetId,p_reason:reason});
+  if(error)throw error;
+  if(!state.authorized||!$('ipRevealDialog').open||recordState.selectedId!==targetId)return;
+  const result=Array.isArray(data)?data[0]:data;
+  if(!result||typeof result.source_ip!=='string')throw new Error('查閱結果不存在');
+  $('revealedIP').textContent=`來源 IP：${result.source_ip}`;
+  $('revealedIP').hidden=false;
+  $('revealStatus').textContent='✅ 已記錄查閱原因。請勿轉傳或公開 IP。關閉視窗後 IP 將從畫面清除。';
+ }catch(err){
+  $('revealStatus').textContent='⚠️ 查閱失敗。請確認 IP 未到期、原因符合規定且具管理員授權。';
+  console.error('NN IP reveal failed',err?.code||'error');
+ }finally{recordState.revealBusy=false;$('confirmReveal').disabled=false;}
+});
+
 await loadSummary();
+await loadIpList();
 </script>
 </body>
 </html>
