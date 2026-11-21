@@ -1,230 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#080f26" />
-  <meta name="description" content="NN匿名｜官方網站、匿名投稿、管理員與系統工具的快捷入口。" />
-  <title>快捷入口中心｜NN匿名</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #080f26;
-      --card: rgba(17, 31, 66, .86);
-      --line: rgba(182, 204, 255, .16);
-      --white: #f5f8ff;
-      --muted: #b5c6ea;
-      --blue: #6c9aff;
-      --violet: #b392ff;
-      --green: #8de6c5;
-    }
-    * { box-sizing: border-box; }
-    [hidden] { display: none !important; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      min-height: 100svh;
-      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", sans-serif;
-      background:
-        radial-gradient(ellipse at 5% 4%, rgba(37, 89, 190, .48), transparent 38%),
-        radial-gradient(ellipse at 90% 35%, rgba(107, 68, 177, .36), transparent 42%),
-        var(--bg);
-      color: var(--white);
-      line-height: 1.55;
-    }
-    a { color: inherit; }
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-    a:focus-visible, button:focus-visible, input:focus-visible {
-      outline: 3px solid #b7d0ff;
-      outline-offset: 3px;
-    }
-    .container { width: min(100% - 32px, 930px); margin: 0 auto; padding: 33px 0 40px; }
-    .topline { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-    .brand { font-size: .78rem; font-weight: 900; letter-spacing: .18em; color: #a4c5ff; }
-    .version { font-size: .73rem; color: #c5d5f4; border: 1px solid var(--line); border-radius: 50px; padding: 5px 11px; }
-    .hero { margin: 34px 0 29px; }
-    .eyebrow { font-size: .76rem; font-weight: 800; letter-spacing: .1em; color: var(--green); }
-    h1 { margin: 10px 0; font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.16; letter-spacing: .015em; }
-    .hero p { margin: 14px 0 0; max-width: 650px; font-size: .95rem; color: var(--muted); }
-    .control { display: grid; gap: 12px; margin: 26px 0 16px; }
-    .search {
-      width: 100%; border: 1px solid rgba(164,196,255,.28); border-radius: 15px;
-      background: rgba(10,22,50,.8); color: var(--white); padding: 14px 16px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, .12);
-    }
-    .search::placeholder { color: #9eafd0; }
-    .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
-    .filter { flex: none; border: 1px solid var(--line); padding: 9px 13px; border-radius: 100px; background: rgba(20,36,75,.55); color: #c9d7f6; font-size: .83rem; }
-    .filter[aria-pressed="true"] { border-color: #6c9aff; background: #274c99; color: #fff; }
-    .count { font-size: .78rem; color: #aebfe0; margin: 0 0 26px; }
-    section { margin: 29px 0; }
-    h2 { font-size: 1.14rem; margin: 0 0 6px; letter-spacing: .01em; }
-    .section-lead { margin: 0 0 15px; font-size: .83rem; color: var(--muted); }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-    .link-card {
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 13px;
-      background: var(--card); border: 1px solid var(--line); border-radius: 18px;
-      padding: 18px; min-height: 125px; text-decoration: none;
-      box-shadow: 0 10px 22px rgba(0,0,0,.09); transition: transform .16s, border-color .16s, background .16s;
-    }
-    .link-card:hover { border-color: #87abff; background: #1a315f; transform: translateY(-2px); }
-    .card-main { min-width: 0; }
-    .icon { display: inline-grid; place-items: center; width: 35px; height: 35px; border-radius: 11px; font-size: 1.14rem; background: #233e7f; margin-bottom: 9px; }
-    .name { display: block; font-size: 1rem; font-weight: 800; }
-    .desc { display: block; font-size: .78rem; color: var(--muted); margin-top: 4px; }
-    .arrow { font-size: 1.17rem; color: #a2c2ff; font-weight: 800; padding-top: 7px; }
-    .note { margin-top: 25px; padding: 17px 18px; border: 1px solid var(--line); border-radius: 16px; background: rgba(24, 40, 79, .6); font-size: .83rem; color: #c8d9f7; }
-    .note strong { color: #fff; }
-    .empty { display:none; border: 1px dashed var(--line); color: var(--muted); text-align: center; padding: 24px; border-radius: 16px; }
-    footer { margin-top: 38px; border-top: 1px solid var(--line); padding-top: 21px; color: #91a6cd; text-align: center; font-size: .74rem; line-height: 2; }
-    @media (max-width: 630px) {
-      .container { padding-top: 23px; }
-      .grid { grid-template-columns: 1fr; }
-      .hero { margin-top: 26px; }
-      .link-card { min-height: 108px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      .link-card { transition: none; }
-    }
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071127"><meta name="description" content="NN匿名投稿者快捷中心，清楚快速找到需要的功能。">
+
+<title>投稿者快捷中心｜NN匿名</title>
+<style>:root{color-scheme:dark;--bg:#071127;--panel:rgba(18,36,75,.92);--panel2:rgba(12,28,59,.95);--line:rgba(172,205,255,.19);--text:#f3f7ff;--muted:#c0d0eb;--blue:#86b1ff;--mint:#a5efd3;--purple:#c6b1ff;--radius:21px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}[hidden]{display:none!important}body{min-height:100svh;margin:0;color:var(--text);font:16px/1.75 -apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;background:radial-gradient(ellipse at 10% 0%,#244788 0,transparent 40%),radial-gradient(ellipse at 95% 45%,#392b73 0,transparent 42%),var(--bg)}a{color:inherit}button,input{font:inherit}button{cursor:pointer}a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #c3dcff;outline-offset:3px}.wrap{width:min(100% - 36px,1020px);margin:auto;padding:26px 0 65px}.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}.brand{font-size:1.12rem;font-weight:950;letter-spacing:.03em;text-decoration:none}.brand span{display:block;font-size:.66rem;letter-spacing:.17em;color:#a4c5ff;font-weight:800;margin-top:-3px}.tag{border:1px solid var(--line);color:#dfebff;border-radius:99px;padding:4px 12px;font-size:.76rem;background:#243b68}.hero{padding:54px 0 29px}.eyebrow{font-size:.73rem;color:var(--mint);font-weight:800;letter-spacing:.13em}.hero h1{margin:8px 0 15px;line-height:1.22;font-size:clamp(2.02rem,6.4vw,3.3rem);letter-spacing:.012em;text-wrap:balance}.hero p{margin:0;max-width:720px;color:var(--muted);font-size:clamp(.94rem,2.5vw,1.05rem);line-height:1.9;text-wrap:pretty}.highlights{display:flex;gap:10px;flex-wrap:wrap;margin:21px 0 0}.highlight{font-size:.8rem;color:#e6edff;background:#1c3563;border:1px solid var(--line);padding:5px 11px;border-radius:99px}.primary-links{display:flex;flex-wrap:wrap;gap:11px;margin:27px 0 12px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:49px;padding:11px 17px;border-radius:13px;text-decoration:none;background:#234577;border:1px solid #628bd0;color:#fff;font-weight:800;font-size:.92rem}.btn.primary{background:linear-gradient(125deg,#2777e6,#7954de);border-color:transparent;box-shadow:0 8px 28px #1c4bbc40}.btn:hover{filter:brightness(1.1)}.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:35px 0 8px}.search{width:min(100%,390px);border:1px solid #6386be;background:#0b1d41;color:var(--text);border-radius:13px;padding:11px 15px;min-height:46px}.search::placeholder{color:#b3c5df}.count{font-size:.85rem;color:#d5e3fc;margin:10px 0 0}.section{margin:28px 0 34px}.sectionhead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:15px}.sectionhead h2{font-size:1.3rem;line-height:1.4;letter-spacing:.01em;margin:0}.sectionhead small{color:var(--muted);font-size:.8rem}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.card{display:flex;align-items:center;gap:15px;text-decoration:none;background:linear-gradient(145deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:21px;min-height:115px;transition:border-color .2s,transform .2s;min-width:0}.card:hover{border-color:var(--blue);transform:translateY(-2px)}.card .icon{display:grid;place-items:center;flex:none;font-size:1.5rem;width:47px;height:47px;border-radius:14px;background:#284a86}.card .body{min-width:0;flex:1}.card .title{font-size:1.06rem;line-height:1.55;font-weight:850;overflow-wrap:anywhere}.card .desc{margin-top:5px;font-size:.83rem;line-height:1.65;color:var(--muted);overflow-wrap:anywhere}.card .arrow{color:#b8d1ff;align-self:start;margin-top:4px}.notice{margin:20px 0 5px;padding:16px 19px;background:#172e57;border:1px solid #688ac1;border-radius:15px;font-size:.89rem;line-height:1.8;color:#e2ecff}.notice.error{background:#44253a;border-color:#b87393}.notice.success{background:#153c38;border-color:#468e7b}.foot{border-top:1px solid var(--line);margin-top:44px;padding-top:20px;text-align:center;color:#aebedd;font-size:.77rem;line-height:2}.foot a{color:#c6dcff}.empty{padding:25px 19px;border:1px dashed #698ac3;border-radius:18px;color:var(--muted);margin-top:15px}.signout{background:#233d69;color:#fff;border:1px solid #6b8ec1;border-radius:12px;padding:8px 13px;min-height:42px;display:none}.signout.show{display:inline-flex}.admin-meta{margin-top:16px;color:#a9edce;font-size:.82rem}
+@media(max-width:650px){.wrap{width:min(100% - 30px,1020px)}.hero{padding:39px 0 16px}.cards{grid-template-columns:1fr}.card{padding:18px;min-height:102px}.toolbar{align-items:stretch}.search{width:100%}.primary-links .btn{flex:1}.sectionhead h2{font-size:1.16rem}}@media(prefers-reduced-motion:reduce){.card{transition:none}html{scroll-behavior:auto}}
+</style>
 </head>
 <body>
-  <main class="container">
-    <div class="topline">
-      <div class="brand">NN ANONYMOUS</div>
-      <div class="version">V1.2 · 快捷入口</div>
-    </div>
+<main class="wrap">
+ <header class="top"><a class="brand" href="nn-portal.html">NN匿名<span>NN ANONYMOUS</span></a><span class="tag">投稿者入口</span></header>
+ <section class="hero" aria-labelledby="pageTitle">
+  <div class="eyebrow">WELCOME · NN ANONYMOUS</div><h1 id="pageTitle">NN匿名<br>投稿者快捷中心</h1><p>想說的話，從這裡開始。你可以匿名投稿，也能閱讀已通過審核的公開貼文；無須提供 Instagram 帳號。</p>
+  <div class="highlights"><span class="highlight">✉️ 自由分享</span><span class="highlight">📣 公開投稿</span><span class="highlight">🛡️ 尊重匿名</span></div>
+  <div class="primary-links"><a class="btn primary" href="submit.html">✉️ 開始投稿</a><a class="btn" href="posts.html">📣 查看公開貼文</a></div>
+ </section>
+ <p class="notice" id="notice" role="status" aria-live="polite">正在載入最新入口設定……</p>
+ <div class="toolbar"><input id="search" class="search" type="search" autocomplete="off" aria-label="搜尋入口" placeholder="搜尋投稿、公開貼文、首頁"/><span id="count" class="count" role="status">—</span></div>
+ <div id="sections"></div><div class="empty" id="empty" hidden>找不到符合的入口，請換個關鍵字。</div>
+ <footer class="foot">© 2026 NN匿名 · V1.4 · 投稿者專用<br>NN匿名為獨立經營的匿名交流平台，並非學校或官方機構。匿名投稿仍須遵守相關法律與平台規則。</footer>
+</main>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const db=createClient('https://skasotsajckswovqhbeo.supabase.co','sb_publishable_k81-D28G-ipWmKVRwX2zpg_7y_xMvLX',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+const $=id=>document.getElementById(id);
+let links=[];
+function setNotice(message,kind=''){const n=$('notice');n.textContent=message;n.className='notice '+kind;n.hidden=false;}
+function safeHref(href){if(typeof href!=='string')return null;if(/^[a-z0-9][a-z0-9_-]*\.html$/.test(href))return href;try{const u=new URL(href);if(u.protocol!=='https:'||!['github.com','supabase.com','dash.cloudflare.com'].includes(u.hostname)||u.username||u.password)return null;return u.href;}catch{return null}}
+function text(tag,className,value){const e=document.createElement(tag);if(className)e.className=className;e.textContent=String(value??'');return e;}
+function makeCard(link){const href=safeHref(link.href);if(!href)return null;const a=document.createElement('a');a.href=href;a.className='card';if(href.startsWith('https:')){a.target='_blank';a.rel='noopener noreferrer';}
+ const ico=text('span','icon',link.icon||'🔗');ico.setAttribute('aria-hidden','true');const body=document.createElement('span');body.className='body';body.append(text('span','title',link.title),text('div','desc',link.description));const arrow=text('span','arrow','↗');arrow.setAttribute('aria-hidden','true');a.append(ico,body,arrow);return a;}
+function render(){const root=$('sections');root.replaceChildren();const q=($('search')?.value||'').trim().toLocaleLowerCase('zh-TW');const matches=links.filter(x=>[x.title,x.description,x.group_name].join(' ').toLocaleLowerCase('zh-TW').includes(q));const groups=new Map();for(const link of matches){if(!groups.has(link.group_name))groups.set(link.group_name,[]);groups.get(link.group_name).push(link);}
+ let shown=0;for(const [group,items] of groups){const sec=document.createElement('section');sec.className='section';const head=document.createElement('div');head.className='sectionhead';head.append(text('h2','',group),text('small','',`${items.length} 個入口`));sec.append(head);const grid=document.createElement('div');grid.className='cards';for(const link of items){const card=makeCard(link);if(card){grid.append(card);shown++}}if(grid.childElementCount){sec.append(grid);root.append(sec)}}
+ $('count').textContent=`顯示 ${shown} 個入口`; $('empty').hidden=shown>0;}
+$('search').addEventListener('input',render);
 
-    <header class="hero">
-      <div class="eyebrow">ALL LINKS · ONE PAGE</div>
-      <h1>NN匿名<br>快捷入口中心</h1>
-      <p>官方網站、公開投稿牆、管理員審核／回覆、網站與 IG 發布、統計中心及維護工具，集中在同一頁。需要權限的系統仍須自行登入。</p>
-    </header>
 
-    <div class="control">
-      <input id="search" class="search" type="search" aria-label="搜尋網站入口" placeholder="🔎 搜尋入口，例如：投稿、管理員、Supabase" autocomplete="off" />
-      <div class="filters" role="group" aria-label="入口類別">
-        <button class="filter" data-filter="all" aria-pressed="true" type="button">全部入口</button>
-        <button class="filter" data-filter="public" aria-pressed="false" type="button">一般使用者</button>
-        <button class="filter" data-filter="admin" aria-pressed="false" type="button">管理員</button>
-        <button class="filter" data-filter="tools" aria-pressed="false" type="button">系統工具</button>
-      </div>
-    </div>
-    <p class="count" id="count" role="status" aria-live="polite">共 14 個入口</p>
+const fallback=[
+ {group_name:'投稿服務',title:'開始匿名投稿',description:'寫下想分享的內容，完成驗證後送出。',icon:'✉️',href:'submit.html'},
+ {group_name:'投稿服務',title:'查看公開投稿',description:'閱讀已通過審核並公開的貼文。',icon:'📣',href:'posts.html'},
+ {group_name:'認識平台',title:'NN匿名官方首頁',description:'了解平台定位及使用方式。',icon:'🏠',href:'index.html'}
+];
+async function boot(){try{const{data,error}=await db.rpc('nn_public_portal_links');if(error)throw error;links=Array.isArray(data)?data:[];render();$('notice').hidden=true;}catch(e){links=fallback;render();setNotice('入口設定暫時無法同步，已顯示基本投稿入口。','');}}
+boot();
 
-    <section data-section="public">
-      <h2>🌐 一般使用者</h2>
-      <p class="section-lead">對外公開的官方網站與匿名投稿入口</p>
-      <div class="grid">
-        <a class="link-card" data-category="public" href="index.html" data-search="官方首頁 NN匿名 網站介紹 home">
-          <span class="card-main"><span class="icon" aria-hidden="true">🏠</span><span class="name">NN匿名官方首頁</span><span class="desc">網站介紹、主要導覽</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="public" href="submit.html" data-search="正式匿名投稿 submit 表單 Cloudflare Turnstile">
-          <span class="card-main"><span class="icon" aria-hidden="true">✉️</span><span class="name">正式匿名投稿</span><span class="desc">填寫投稿並完成機器人驗證</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="public" href="posts.html" data-search="公開投稿牆 已通過 發布 文章 post 觀看 閱讀">
-          <span class="card-main"><span class="icon" aria-hidden="true">📖</span><span class="name">查看公開投稿</span><span class="desc">閱讀已審核並正式公開的匿名投稿與小編回覆</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-      </div>
-    </section>
-
-    <section data-section="admin">
-      <h2>🔐 管理員專區</h2>
-      <p class="section-lead">僅授權管理員可登入或執行管理操作</p>
-      <div class="grid">
-        <a class="link-card" data-category="admin" href="admin-login.html" data-search="管理員登入 login 登入帳號 密碼">
-          <span class="card-main"><span class="icon" aria-hidden="true">🔑</span><span class="name">管理員登入</span><span class="desc">管理員建議由此入口開始</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="admin" href="admin-dashboard.html" data-search="管理員 控制台 dashboard 後台 審核 投稿">
-          <span class="card-main"><span class="icon" aria-hidden="true">🗂️</span><span class="name">管理員控制後台</span><span class="desc">投稿管理、審核與後台功能</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="admin" href="admin-reply.html" data-search="管理員回覆 匿名投稿 reply">
-          <span class="card-main"><span class="icon" aria-hidden="true">💬</span><span class="name">管理員回覆系統</span><span class="desc">處理及管理投稿回覆</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="admin" href="admin-publish.html" data-search="管理員發布 網站公開 下架 Instagram IG 草稿 圖片 publish">
-          <span class="card-main"><span class="icon" aria-hidden="true">📣</span><span class="name">網站／IG 發布中心</span><span class="desc">管理網站公開與下架、IG 草稿及圖片匯出</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="admin" href="admin-stats.html" data-search="管理員統計 儀表板 投稿數量 趨勢 搜尋 統計 V1.2">
-          <span class="card-main"><span class="icon" aria-hidden="true">📊</span><span class="name">V1.2 統計中心</span><span class="desc">投稿數、審核狀態、發布紀錄與趨勢</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="admin" href="reset-password.html" data-search="管理員重設密碼 reset password 忘記密碼">
-          <span class="card-main"><span class="icon" aria-hidden="true">🛡️</span><span class="name">重設管理員密碼</span><span class="desc">密碼重設與帳號復原</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-      </div>
-      <p class="section-lead" style="margin-top:16px">🛡️ IP 安全查閱：尚未啟用。完成資料表權限檢查、查閱授權與稽核紀錄後才會新增入口。</p>
-    </section>
-
-    <section data-section="tools">
-      <h2>⚙️ 系統與維護工具</h2>
-      <p class="section-lead">專案維護、部署與安全管理用入口</p>
-      <div class="grid">
-        <a class="link-card" data-category="tools" href="https://github.com/nn-anonymous/nn-anonymous" target="_blank" rel="noopener noreferrer" data-search="GitHub 原始碼 儲存庫">
-          <span class="card-main"><span class="icon" aria-hidden="true">💻</span><span class="name">GitHub 程式碼</span><span class="desc">檢視與維護網站檔案</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="tools" href="https://github.com/nn-anonymous/nn-anonymous/settings/pages" target="_blank" rel="noopener noreferrer" data-search="GitHub Pages 網站部署 設定">
-          <span class="card-main"><span class="icon" aria-hidden="true">🚀</span><span class="name">GitHub Pages 設定</span><span class="desc">發布狀態、部署與網址設定</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="tools" href="https://supabase.com/dashboard/projects" target="_blank" rel="noopener noreferrer" data-search="Supabase 資料庫 Edge Functions API">
-          <span class="card-main"><span class="icon" aria-hidden="true">🗄️</span><span class="name">Supabase 控制台</span><span class="desc">資料庫、驗證及 Edge Functions</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="tools" href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer" data-search="Cloudflare Turnstile 機器人 驗證 網域">
-          <span class="card-main"><span class="icon" aria-hidden="true">☁️</span><span class="name">Cloudflare 控制台</span><span class="desc">Turnstile 網域與安全設定</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="link-card" data-category="tools" href="submit-test.html" data-search="測試投稿 submit test 內部測試">
-          <span class="card-main"><span class="icon" aria-hidden="true">🧪</span><span class="name">測試投稿頁</span><span class="desc">僅供內部維護；送出可能寫入資料庫</span></span><span class="arrow" aria-hidden="true">↗</span>
-        </a>
-      </div>
-    </section>
-
-    <div class="empty" id="empty">沒有找到符合條件的入口，請換個關鍵字。</div>
-
-    <aside class="note">
-      <strong>🔒 安全提醒：</strong>這是方便導覽的「連結頁」，不是登入驗證系統。若部署在公開的 GitHub Pages，任何知道網址的人都能查看此頁的連結；管理權限仍必須由 Supabase／後端驗證。請勿在頁面中加入密碼、Secret Key、IP 紀錄或私人憑證。
-    </aside>
-
-    <footer>
-      © 2026 NN匿名 · 獨立經營的匿名交流平台<br>
-      非任何學校或官方機構所設立<br>
-      本平台由黑熊工作室提供
-    </footer>
-  </main>
-  <script>
-    const search = document.querySelector('#search');
-    const filters = document.querySelectorAll('[data-filter]');
-    const sections = document.querySelectorAll('[data-section]');
-    const cards = document.querySelectorAll('.link-card');
-    const count = document.querySelector('#count');
-    const empty = document.querySelector('#empty');
-    let currentFilter = 'all';
-
-    function updateView() {
-      const query = search.value.trim().toLocaleLowerCase();
-      let shown = 0;
-      cards.forEach(card => {
-        const categoryMatch = currentFilter === 'all' || card.dataset.category === currentFilter;
-        const textMatch = (card.dataset.search + ' ' + card.textContent).toLocaleLowerCase().includes(query);
-        const visible = categoryMatch && textMatch;
-        card.hidden = !visible;
-        if (visible) shown++;
-      });
-      sections.forEach(section => {
-        section.hidden = !section.querySelector('.link-card:not([hidden])');
-      });
-      count.textContent = `顯示 ${shown} 個入口（共 ${cards.length} 個）`;
-      empty.style.display = shown ? 'none' : 'block';
-    }
-
-    filters.forEach(filter => {
-      filter.addEventListener('click', () => {
-        currentFilter = filter.dataset.filter;
-        filters.forEach(item => item.setAttribute('aria-pressed', String(item === filter)));
-        updateView();
-      });
-    });
-    search.addEventListener('input', updateView);
-    updateView();
-  </script>
+</script>
 </body>
 </html>
