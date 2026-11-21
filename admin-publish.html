@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080f26">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>網站發布與 IG 管理｜NN匿名 V1.2.1</title>
+<title>網站發布與 IG 管理｜NN匿名 V1.4.2</title>
 <style>
 :root{color-scheme:dark;--bg:#080f26;--surface:#101d3a;--line:#ffffff27;--muted:#b7c6e8;--blue:#3989ff;--purple:#7453ef}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 9% 4%,#264783,transparent 34%),radial-gradient(circle at 95% 100%,#43316c,transparent 34%),var(--bg);color:#f5f8ff;font:16px/1.7 -apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
@@ -24,10 +24,21 @@ a{color:#b7d4ff}header{border-bottom:1px solid var(--line);padding:18px max(16px
 .nn-unified-nav .nn-tab[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:#8db4ff;border-radius:4px 4px 0 0;box-shadow:0 0 8px #8db4ff55}
 @media(max-width:600px){.nn-nav-shell{padding:0 14px}.nn-unified-nav{gap:23px}.nn-unified-nav .nn-tab{font-size:15px;min-height:49px;padding:12px 0}}
 
+
+/* NN匿名 V1.4.2：可調整編號順序、單欄／網格、每次顯示筆數 */
+.display-settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0 6px;padding:16px;border:1px solid #5274aa70;border-radius:15px;background:#10254a}
+.display-settings .setting{min-width:0}
+.display-settings label{margin:0 0 6px;color:#d8e7ff;font-size:13px}
+.display-settings select{width:100%;min-width:0;max-width:100%;font-size:15px}
+.display-summary{font-size:13px;color:#aec8ef;margin:6px 0 14px;line-height:1.7}
+.cards[data-layout="single"]{grid-template-columns:minmax(0,1fr)}
+.cards[data-layout="grid"]{grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))}
+@media(max-width:700px){.display-settings{grid-template-columns:1fr;gap:9px;padding:13px}.display-settings select{font-size:16px}.cards[data-layout="grid"]{grid-template-columns:minmax(0,1fr)}}
+
 </style>
 </head>
 <body>
-<header><div><strong>NN匿名</strong><small>PUBLISHING STUDIO · V1.2.1</small></div></header>
+<header><div><strong>NN匿名</strong><small>PUBLISHING STUDIO · V1.4.2</small></div></header>
 <!-- NN匿名 V1.4.1 統一管理導覽：各頁面相同版型 -->
 <div class="nn-nav-shell"><nav class="nn-unified-nav" aria-label="NN匿名管理員導覽">
   <a class="nn-tab" href="admin-dashboard.html">投稿審核</a>
@@ -51,8 +62,48 @@ a{color:#b7d4ff}header{border-bottom:1px solid var(--line);padding:18px max(16px
 <section id="workspace" aria-label="管理工作區">
 <div class="stats" aria-label="目前載入資料統計"><div class="stat"><b id="totalStat">—</b><span>已編號投稿</span></div><div class="stat"><b id="webStat">—</b><span>已公開到網站</span></div><div class="stat"><b id="igStat">—</b><span>IG 已標記發布</span></div></div>
 <p class="helper">統計以本次讀取的最新最多 200 筆已通過且已編號投稿為準，不是全站歷史總數。</p>
-<div class="panel"><h2>投稿發布工作台</h2><div class="toolbar"><input id="search" type="search" placeholder="搜尋編號、投稿或回覆內容" aria-label="搜尋投稿"><select id="filter" aria-label="篩選發布狀態"><option value="all">所有投稿</option><option value="unpublished">尚未公開到網站</option><option value="published">網站已公開</option><option value="ig_ready">IG 待發布</option><option value="ig_posted">IG 已標記發布</option></select><button id="refresh" type="button">重新整理</button></div>
-<div id="entries" class="cards" aria-live="polite"></div></div>
+<div class="panel"><h2>投稿發布工作台</h2>
+<div class="toolbar">
+  <input id="search" type="search" placeholder="搜尋編號、投稿或回覆內容" aria-label="搜尋投稿">
+  <select id="filter" aria-label="篩選發布狀態">
+    <option value="all">所有投稿</option>
+    <option value="unpublished">尚未公開到網站</option>
+    <option value="published">網站已公開</option>
+    <option value="ig_ready">IG 待發布</option>
+    <option value="ig_posted">IG 已標記發布</option>
+    <option value="ig_draft">IG 草稿</option>
+    <option value="ig_none">尚未建立 IG 草稿</option>
+    <option value="ig_not_posted">IG 尚未標記發布</option>
+  </select>
+  <button id="refresh" type="button">重新整理</button>
+</div>
+<div class="display-settings" role="group" aria-label="投稿排序及排版設定">
+  <div class="setting"><label for="sortOrder">排序方式</label>
+    <select id="sortOrder">
+      <option value="number-asc">編號由小到大（0001 → 0002）</option>
+      <option value="number-desc">編號由大到小（最新編號優先）</option>
+      <option value="new-first">投稿時間：最新在上</option>
+      <option value="old-first">投稿時間：最舊在上</option>
+    </select>
+  </div>
+  <div class="setting"><label for="layoutMode">卡片排版</label>
+    <select id="layoutMode">
+      <option value="single">單欄直排（1、2、3 往下）</option>
+      <option value="grid">自動網格（寬螢幕並排）</option>
+    </select>
+  </div>
+  <div class="setting"><label for="displayCount">顯示筆數</label>
+    <select id="displayCount">
+      <option value="all">全部已載入的投稿</option>
+      <option value="10">前 10 筆</option>
+      <option value="25">前 25 筆</option>
+      <option value="50">前 50 筆</option>
+      <option value="100">前 100 筆</option>
+    </select>
+  </div>
+</div>
+<p id="displaySummary" class="display-summary" role="status" aria-live="polite">正在準備排序……</p>
+<div id="entries" class="cards" data-layout="single" aria-live="polite"></div></div>
 <div class="panel"><h2>最近發布紀錄</h2><p class="muted">這份紀錄不顯示投稿 IP；IG 的「已發布」為管理員手動標記，不代表 Instagram API 已確認。</p><ol id="audit" class="activity"><li>正在載入……</li></ol></div>
 </section>
 <footer>© 2026 NN匿名 · 獨立經營的匿名交流平台 · 管理員專用</footer>
@@ -64,7 +115,31 @@ import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const db=createClient('https://skasotsajckswovqhbeo.supabase.co','sb_publishable_k81-D28G-ipWmKVRwX2zpg_7y_xMvLX',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 const $=id=>document.getElementById(id);
 const notice=$('notice'),workspace=$('workspace'),entries=$('entries'),audit=$('audit');
-const state={items:[],web:new Map(),ig:new Map(),busy:false,authorized:false,image:null};
+const state={items:[],web:new Map(),ig:new Map(),busy:false,authorized:false,image:null,captionEdits:new Map()};
+const displayPrefKey='nn_publish_view_v142';
+function restoreDisplayPrefs(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(displayPrefKey)||'{}');
+    for(const [id,key] of [['sortOrder','sort'],['layoutMode','layout'],['displayCount','count']]){
+      const select=$(id);
+      if(typeof saved[key]==='string'&&Array.from(select.options).some(o=>o.value===saved[key]))select.value=saved[key];
+    }
+  }catch{ /* 私密瀏覽或不支援儲存時，直接使用頁面預設值 */ }
+}
+function saveDisplayPrefs(){
+  try{localStorage.setItem(displayPrefKey,JSON.stringify({sort:$('sortOrder').value,layout:$('layoutMode').value,count:$('displayCount').value}))}catch{}
+}
+function comparePosts(a,b){
+  const mode=$('sortOrder').value;
+  const numA=BigInt(String(a.post_number)),numB=BigInt(String(b.post_number));
+  const numberDiff=numA===numB?0:numA<numB?-1:1;
+  if(mode==='number-asc')return numberDiff;
+  if(mode==='number-desc')return -numberDiff;
+  const timeA=new Date(a.created_at||0).getTime()||0;
+  const timeB=new Date(b.created_at||0).getTime()||0;
+  return (mode==='old-first'?timeA-timeB:timeB-timeA)||numberDiff;
+}
+restoreDisplayPrefs();
 const dateText=value=>value?new Date(value).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false}):'尚無';
 const label=n=>'#NN匿名'+String(n).padStart(4,'0');
 function elt(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!==undefined)el.textContent=text;return el}
@@ -87,11 +162,36 @@ try{
 finally{state.busy=false;$('refresh').disabled=false}}
 async function loadAudit(){const{data,error}=await db.rpc('nn_recent_publication_activity',{p_limit:20});audit.replaceChildren();if(error){audit.append(elt('li','','尚無法讀取稽核紀錄'));return}for(const a of data||[]){audit.append(elt('li','',`${dateText(a.created_at)} · ${label(a.post_number)} · ${a.action}`))}if(!data?.length)audit.append(elt('li','','目前沒有發布紀錄'))}
 function makeDefaultCaption(x){return `匿名提問：\n${x.content||''}\n\n小編：\n${x.editor_reply||''}\n\n${label(x.post_number)}`}
-function render(){entries.replaceChildren();const q=$('search').value.trim().toLocaleLowerCase(),f=$('filter').value;
-const filtered=state.items.filter(x=>{const num=String(x.post_number);const web=state.web.get(num)?.status==='published';const ig=state.ig.get(num)?.state||'draft';const matches=String(x.content||'').toLocaleLowerCase().includes(q)||String(x.editor_reply||'').toLocaleLowerCase().includes(q)||label(num).toLocaleLowerCase().includes(q)||String(x.id).includes(q);return matches&&(f==='all'||f==='published'&&web||f==='unpublished'&&!web||f==='ig_ready'&&ig==='ready'||f==='ig_posted'&&ig==='posted')});
-$('totalStat').textContent=String(state.items.length);$('webStat').textContent=String(state.items.filter(x=>state.web.get(String(x.post_number))?.status==='published').length);$('igStat').textContent=String(state.items.filter(x=>state.ig.get(String(x.post_number))?.state==='posted').length);
-if(!filtered.length){entries.append(elt('div','empty','沒有符合條件的投稿，或尚無可發布的正式編號。'));return}
-for(const x of filtered)renderCard(x)
+function render(){
+  entries.replaceChildren();
+  const q=$('search').value.trim().toLocaleLowerCase(),f=$('filter').value;
+  const filtered=state.items.filter(x=>{
+    const num=String(x.post_number);
+    const web=state.web.get(num)?.status==='published';
+    const igState=state.ig.get(num)?.state;
+    const matches=String(x.content||'').toLocaleLowerCase().includes(q)
+      ||String(x.editor_reply||'').toLocaleLowerCase().includes(q)
+      ||label(num).toLocaleLowerCase().includes(q)
+      ||String(x.id).includes(q);
+    const matchesFilter=f==='all'
+      ||(f==='published'&&web)
+      ||(f==='unpublished'&&!web)
+      ||(f==='ig_ready'&&igState==='ready')
+      ||(f==='ig_posted'&&igState==='posted')
+      ||(f==='ig_draft'&&igState==='draft')
+      ||(f==='ig_none'&&!igState)
+      ||(f==='ig_not_posted'&&igState!=='posted');
+    return matches&&matchesFilter;
+  }).sort(comparePosts);
+  const limit=$('displayCount').value==='all' ? filtered.length : Number($('displayCount').value);
+  const displayed=filtered.slice(0,limit);
+  entries.dataset.layout=$('layoutMode').value;
+  $('displaySummary').textContent=`符合條件 ${filtered.length} 筆，目前顯示 ${displayed.length} 筆。排序只調整畫面，不改變正式編號或發布狀態。${state.items.length>=200?'（目前一次最多載入最新 200 筆，較早投稿可能不在本次清單。）':''}`;
+  $('totalStat').textContent=String(state.items.length);
+  $('webStat').textContent=String(state.items.filter(x=>state.web.get(String(x.post_number))?.status==='published').length);
+  $('igStat').textContent=String(state.items.filter(x=>state.ig.get(String(x.post_number))?.state==='posted').length);
+  if(!filtered.length){entries.append(elt('div','empty','沒有符合條件的投稿，或尚無可發布的正式編號。'));return}
+  for(const x of displayed)renderCard(x);
 }
 function renderCard(x){const num=String(x.post_number),web=state.web.get(num),ig=state.ig.get(num);const live=web?.status==='published';const card=elt('article','post');const top=elt('div','post-top');top.append(elt('strong','post-title',label(num)),elt('span','pill'+(live?' live':''),live?'網站已公開':'網站未公開'));card.append(top);card.append(elt('p','muted',`原投稿 ID ${x.id} · ${dateText(x.created_at)}`));const content=elt('div','post-content',x.content||'');const reply=elt('div','post-content reply','小編：'+(x.editor_reply||''));card.append(content,reply);
 const webBtns=elt('div','buttons');const webBtn=elt('button',live?'danger':'primary',live?'從網站下架':'發布到網站');webBtn.type='button';webBtn.addEventListener('click',async()=>{const want=!live;const confirmed=confirm(want?`確定公開 ${label(num)} 到 NN匿名網站？\n投稿原文和小編回覆會讓任何訪客看到。`:`確定從網站下架 ${label(num)}？\n下架不會刪除原投稿或正式編號。`);if(!confirmed)return;webBtn.disabled=true;
@@ -100,8 +200,8 @@ catch(err){setNotice(`⚠️ 網站發布操作失敗：${msg(err)}`,'warn');web
 if(live){const sync=elt('button','','同步最新小編回覆');sync.type='button';sync.addEventListener('click',async()=>{if(!confirm(`將 ${label(num)} 的網站貼文內容更新成目前已審核的原文及小編回覆？`))return;sync.disabled=true;try{const{error}=await db.rpc('nn_set_web_publication',{p_post_number:Number(num),p_publish:true});if(error)throw error;setNotice(`✅ ${label(num)} 已同步最新內容。`,'success');await load()}catch(err){setNotice('⚠️ 同步失敗：'+msg(err),'warn');sync.disabled=false}});webBtns.append(sync)}
 const view=elt('a','','查看公開貼文牆');view.href='posts.html';webBtns.append(view);card.append(webBtns);
 const details=elt('details');const summary=elt('summary','','Instagram 貼文管理'+(ig?' · '+{draft:'草稿',ready:'待發布',posted:'已標記發布'}[ig.state]:' · 尚未建立'));details.append(summary);const info=elt('p','helper','可用 iPhone 分享選單把 4:5 圖片交給 Instagram，也可下載 PNG、複製文案及手動記錄狀態；不會自動發文。');details.append(info);
-const capLabel=elt('label','','Instagram 貼文文案');const textarea=elt('textarea');textarea.id=`cap-${num}`;capLabel.htmlFor=textarea.id;textarea.value=ig?.caption??makeDefaultCaption(x);details.append(capLabel,textarea);const counter=elt('p','helper');const refreshCount=()=>{const count=[...textarea.value].length;counter.textContent=`目前 ${count} / 2200 字${count>2200?' · 超出限制，請先精簡':''}`;counter.style.color=count>2200?'#ffc3c3':''};textarea.addEventListener('input',refreshCount);refreshCount();details.append(counter);
-const buttons=elt('div','buttons');for(const [text,status] of [['儲存草稿','draft'],['標記待發布','ready'],['標記已發布到 IG','posted']]){const b=elt('button',status==='ready'?'primary':'',text);b.type='button';b.addEventListener('click',async()=>{const caption=textarea.value.trim();if(!caption||[...caption].length>2200){alert('請將貼文文案調整為 1～2200 字。');return}if(status==='posted'&&!confirm('請確認你已經在 Instagram 真正發布此貼文。這裡只記錄狀態，不會自動發文。'))return;b.disabled=true;try{const{error}=await db.rpc('nn_save_ig_queue',{p_post_number:Number(num),p_caption:caption,p_state:status});if(error)throw error;setNotice('✅ IG 貼文狀態已儲存。此操作不會自動發文。','success');await load()}
+const capLabel=elt('label','','Instagram 貼文文案');const textarea=elt('textarea');textarea.id=`cap-${num}`;capLabel.htmlFor=textarea.id;textarea.value=state.captionEdits.has(num)?state.captionEdits.get(num):(ig?.caption??makeDefaultCaption(x));details.append(capLabel,textarea);const counter=elt('p','helper');const refreshCount=()=>{const count=[...textarea.value].length;counter.textContent=`目前 ${count} / 2200 字${count>2200?' · 超出限制，請先精簡':''}`;counter.style.color=count>2200?'#ffc3c3':''};textarea.addEventListener('input',()=>{state.captionEdits.set(num,textarea.value);refreshCount()});refreshCount();details.append(counter);
+const buttons=elt('div','buttons');for(const [text,status] of [['儲存草稿','draft'],['標記待發布','ready'],['標記已發布到 IG','posted']]){const b=elt('button',status==='ready'?'primary':'',text);b.type='button';b.addEventListener('click',async()=>{const caption=textarea.value.trim();if(!caption||[...caption].length>2200){alert('請將貼文文案調整為 1～2200 字。');return}if(status==='posted'&&!confirm('請確認你已經在 Instagram 真正發布此貼文。這裡只記錄狀態，不會自動發文。'))return;b.disabled=true;try{const{error}=await db.rpc('nn_save_ig_queue',{p_post_number:Number(num),p_caption:caption,p_state:status});if(error)throw error;state.captionEdits.delete(num);setNotice('✅ IG 貼文狀態已儲存。此操作不會自動發文。','success');await load()}
 catch(err){setNotice('⚠️ IG 管理狀態儲存失敗：'+msg(err),'warn');b.disabled=false}});buttons.append(b)}
 const copy=elt('button','','複製貼文文案');copy.type='button';copy.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(textarea.value);setNotice('✅ 已複製 IG 文案。','success')}catch{textarea.focus();textarea.select();setNotice('請長按選取的文字並複製。','warn')}});buttons.append(copy);
 const img=elt('button','','預覽／直接分享 IG 圖片');img.type='button';img.addEventListener('click',()=>openImage(x));buttons.append(img);details.append(buttons);card.append(details);entries.append(card)}
@@ -190,7 +290,12 @@ $('copyCaptionModal').addEventListener('click',async()=>{
 $('saveImage').addEventListener('click',()=>{if(!state.image)return;const n=Number($('pageSelect').value);paint(state.image.item,n,state.image.pages);const a=document.createElement('a');a.href=cv.toDataURL('image/png');a.download=`NN匿名_${String(state.image.item.post_number).padStart(4,'0')}_IG_${n+1}.png`;document.body.append(a);a.click();a.remove()});
 function closeModal(){$('imageModal').setAttribute('aria-hidden','true');state.image=null}
 $('closeImage').addEventListener('click',closeModal);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-$('search').addEventListener('input',()=>{if(state.authorized)render()});$('filter').addEventListener('change',()=>{if(state.authorized)render()});$('refresh').addEventListener('click',load);
+$('search').addEventListener('input',()=>{if(state.authorized)render()});
+$('filter').addEventListener('change',()=>{if(state.authorized)render()});
+for(const id of ['sortOrder','layoutMode','displayCount']){
+  $(id).addEventListener('change',()=>{saveDisplayPrefs();if(state.authorized)render()});
+}
+$('refresh').addEventListener('click',load);
 try{await adminCheck();await load()}catch(error){workspace.style.display='none';setNotice('🔒 '+msg(error)+'。請先從管理員登入頁登入。','warn');const link=elt('a','','前往管理員登入');link.href='admin-login.html';notice.append(document.createTextNode(' '),link)}
 </script>
 </body>
