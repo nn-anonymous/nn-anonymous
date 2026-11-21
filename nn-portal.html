@@ -94,13 +94,13 @@
   <main class="container">
     <div class="topline">
       <div class="brand">NN ANONYMOUS</div>
-      <div class="version">V1.0 · 快捷入口</div>
+      <div class="version">V1.2 · 快捷入口</div>
     </div>
 
     <header class="hero">
       <div class="eyebrow">ALL LINKS · ONE PAGE</div>
       <h1>NN匿名<br>快捷入口中心</h1>
-      <p>官方網站、匿名投稿、管理員後台與系統工具，集中在同一頁。點選卡片即可開啟對應網站；需要權限的系統仍須自行登入。</p>
+      <p>官方網站、公開投稿牆、管理員審核／回覆、網站與 IG 發布、統計中心及維護工具，集中在同一頁。需要權限的系統仍須自行登入。</p>
     </header>
 
     <div class="control">
@@ -112,7 +112,7 @@
         <button class="filter" data-filter="tools" aria-pressed="false" type="button">系統工具</button>
       </div>
     </div>
-    <p class="count" id="count" role="status" aria-live="polite">共 11 個入口</p>
+    <p class="count" id="count" role="status" aria-live="polite">共 14 個入口</p>
 
     <section data-section="public">
       <h2>🌐 一般使用者</h2>
@@ -123,6 +123,9 @@
         </a>
         <a class="link-card" data-category="public" href="submit.html" data-search="正式匿名投稿 submit 表單 Cloudflare Turnstile">
           <span class="card-main"><span class="icon" aria-hidden="true">✉️</span><span class="name">正式匿名投稿</span><span class="desc">填寫投稿並完成機器人驗證</span></span><span class="arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="link-card" data-category="public" href="posts.html" data-search="公開投稿牆 已通過 發布 文章 post 觀看 閱讀">
+          <span class="card-main"><span class="icon" aria-hidden="true">📖</span><span class="name">查看公開投稿</span><span class="desc">閱讀已審核並正式公開的匿名投稿與小編回覆</span></span><span class="arrow" aria-hidden="true">↗</span>
         </a>
       </div>
     </section>
@@ -140,10 +143,17 @@
         <a class="link-card" data-category="admin" href="admin-reply.html" data-search="管理員回覆 匿名投稿 reply">
           <span class="card-main"><span class="icon" aria-hidden="true">💬</span><span class="name">管理員回覆系統</span><span class="desc">處理及管理投稿回覆</span></span><span class="arrow" aria-hidden="true">↗</span>
         </a>
+        <a class="link-card" data-category="admin" href="admin-publish.html" data-search="管理員發布 網站公開 下架 Instagram IG 草稿 圖片 publish">
+          <span class="card-main"><span class="icon" aria-hidden="true">📣</span><span class="name">網站／IG 發布中心</span><span class="desc">管理網站公開與下架、IG 草稿及圖片匯出</span></span><span class="arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="link-card" data-category="admin" href="admin-stats.html" data-search="管理員統計 儀表板 投稿數量 趨勢 搜尋 統計 V1.2">
+          <span class="card-main"><span class="icon" aria-hidden="true">📊</span><span class="name">V1.2 統計中心</span><span class="desc">投稿數、審核狀態、發布紀錄與趨勢</span></span><span class="arrow" aria-hidden="true">↗</span>
+        </a>
         <a class="link-card" data-category="admin" href="reset-password.html" data-search="管理員重設密碼 reset password 忘記密碼">
           <span class="card-main"><span class="icon" aria-hidden="true">🛡️</span><span class="name">重設管理員密碼</span><span class="desc">密碼重設與帳號復原</span></span><span class="arrow" aria-hidden="true">↗</span>
         </a>
       </div>
+      <p class="section-lead" style="margin-top:16px">🛡️ IP 安全查閱：尚未啟用。完成資料表權限檢查、查閱授權與稽核紀錄後才會新增入口。</p>
     </section>
 
     <section data-section="tools">
@@ -171,7 +181,7 @@
     <div class="empty" id="empty">沒有找到符合條件的入口，請換個關鍵字。</div>
 
     <aside class="note">
-      <strong>🔒 安全提醒：</strong>這是方便導覽的「連結頁」，不是登入驗證系統。若部署在公開的 GitHub Pages，任何知道網址的人都能查看此頁的連結；管理權限仍必須由 Supabase／後端驗證。請勿在頁面中加入密碼、Secret Key 或私人憑證。
+      <strong>🔒 安全提醒：</strong>這是方便導覽的「連結頁」，不是登入驗證系統。若部署在公開的 GitHub Pages，任何知道網址的人都能查看此頁的連結；管理權限仍必須由 Supabase／後端驗證。請勿在頁面中加入密碼、Secret Key、IP 紀錄或私人憑證。
     </aside>
 
     <footer>
