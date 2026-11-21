@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080f26">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>網站發布與 IG 管理｜NN匿名 V1.4.2</title>
+<title>網站發布與 IG 管理｜NN匿名 V1.4.3</title>
 <style>
 :root{color-scheme:dark;--bg:#080f26;--surface:#101d3a;--line:#ffffff27;--muted:#b7c6e8;--blue:#3989ff;--purple:#7453ef}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 9% 4%,#264783,transparent 34%),radial-gradient(circle at 95% 100%,#43316c,transparent 34%),var(--bg);color:#f5f8ff;font:16px/1.7 -apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif}
@@ -25,20 +25,31 @@ a{color:#b7d4ff}header{border-bottom:1px solid var(--line);padding:18px max(16px
 @media(max-width:600px){.nn-nav-shell{padding:0 14px}.nn-unified-nav{gap:23px}.nn-unified-nav .nn-tab{font-size:15px;min-height:49px;padding:12px 0}}
 
 
-/* NN匿名 V1.4.2：可調整編號順序、單欄／網格、每次顯示筆數 */
-.display-settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0 6px;padding:16px;border:1px solid #5274aa70;border-radius:15px;background:#10254a}
-.display-settings .setting{min-width:0}
-.display-settings label{margin:0 0 6px;color:#d8e7ff;font-size:13px}
-.display-settings select{width:100%;min-width:0;max-width:100%;font-size:15px}
-.display-summary{font-size:13px;color:#aec8ef;margin:6px 0 14px;line-height:1.7}
+/* NN匿名 V1.4.3：精簡、可展開的顯示設定，適合手機 */
+.view-options{margin:12px 0 7px;border:1px solid #5274aa86;border-radius:12px;background:#10254a;overflow:hidden}
+.view-options-toggle{display:flex;align-items:center;gap:8px;flex-wrap:wrap;cursor:pointer;list-style:none;margin:0;padding:9px 12px;min-height:44px;color:#e4eeff;font-weight:700;font-size:14px;line-height:1.4}
+.view-options-toggle::-webkit-details-marker{display:none}
+.view-options-toggle::after{content:'⌄';margin-left:auto;color:#aacbff;font-size:18px;line-height:1;transition:transform .16s}
+.view-options[open] .view-options-toggle::after{transform:rotate(180deg)}
+.view-options .setting-current{font-size:12px;color:#b4ccf5;font-weight:500;min-width:0;overflow-wrap:anywhere}
+.view-options .display-settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:10px 12px 12px;border-top:1px solid #5274aa60}
+.view-options .setting{min-width:0}
+.view-options .setting label{margin:0 0 4px;color:#d8e7ff;font-size:12px;line-height:1.4}
+.view-options .setting select{display:block;width:100%;min-width:0;max-width:100%;height:40px;padding:7px 9px;font-size:13px;line-height:1.4;border-radius:9px}
+.display-summary{font-size:12px;color:#aec8ef;margin:5px 0 12px;line-height:1.5}
 .cards[data-layout="single"]{grid-template-columns:minmax(0,1fr)}
 .cards[data-layout="grid"]{grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))}
-@media(max-width:700px){.display-settings{grid-template-columns:1fr;gap:9px;padding:13px}.display-settings select{font-size:16px}.cards[data-layout="grid"]{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:700px){
+ .view-options .display-settings{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:9px 11px 11px}
+ .view-options .setting:last-child{grid-column:1/-1}
+ .view-options .setting select{font-size:14px}
+ .cards[data-layout="grid"]{grid-template-columns:minmax(0,1fr)}
+}
 
 </style>
 </head>
 <body>
-<header><div><strong>NN匿名</strong><small>PUBLISHING STUDIO · V1.4.2</small></div></header>
+<header><div><strong>NN匿名</strong><small>PUBLISHING STUDIO · V1.4.3</small></div></header>
 <!-- NN匿名 V1.4.1 統一管理導覽：各頁面相同版型 -->
 <div class="nn-nav-shell"><nav class="nn-unified-nav" aria-label="NN匿名管理員導覽">
   <a class="nn-tab" href="admin-dashboard.html">投稿審核</a>
@@ -77,31 +88,37 @@ a{color:#b7d4ff}header{border-bottom:1px solid var(--line);padding:18px max(16px
   </select>
   <button id="refresh" type="button">重新整理</button>
 </div>
-<div class="display-settings" role="group" aria-label="投稿排序及排版設定">
-  <div class="setting"><label for="sortOrder">排序方式</label>
-    <select id="sortOrder">
-      <option value="number-asc">編號由小到大（0001 → 0002）</option>
-      <option value="number-desc">編號由大到小（最新編號優先）</option>
-      <option value="new-first">投稿時間：最新在上</option>
-      <option value="old-first">投稿時間：最舊在上</option>
-    </select>
+<details class="view-options" id="viewOptions">
+  <summary class="view-options-toggle">
+    <span>⚙️ 排序與顯示</span>
+    <span class="setting-current" id="currentDisplay">編號：新→舊 · 自動網格 · 全部</span>
+  </summary>
+  <div class="display-settings" role="group" aria-label="投稿排序及排版設定">
+    <div class="setting"><label for="sortOrder">排序方式</label>
+      <select id="sortOrder">
+        <option value="number-asc">編號由小到大</option>
+        <option value="number-desc" selected>編號由大到小</option>
+        <option value="new-first">時間：最新在上</option>
+        <option value="old-first">時間：最舊在上</option>
+      </select>
+    </div>
+    <div class="setting"><label for="layoutMode">卡片排版</label>
+      <select id="layoutMode">
+        <option value="single">單欄直排</option>
+        <option value="grid" selected>自動網格</option>
+      </select>
+    </div>
+    <div class="setting"><label for="displayCount">顯示筆數</label>
+      <select id="displayCount">
+        <option value="all" selected>全部已載入</option>
+        <option value="10">10 筆</option>
+        <option value="25">25 筆</option>
+        <option value="50">50 筆</option>
+        <option value="100">100 筆</option>
+      </select>
+    </div>
   </div>
-  <div class="setting"><label for="layoutMode">卡片排版</label>
-    <select id="layoutMode">
-      <option value="single">單欄直排（1、2、3 往下）</option>
-      <option value="grid">自動網格（寬螢幕並排）</option>
-    </select>
-  </div>
-  <div class="setting"><label for="displayCount">顯示筆數</label>
-    <select id="displayCount">
-      <option value="all">全部已載入的投稿</option>
-      <option value="10">前 10 筆</option>
-      <option value="25">前 25 筆</option>
-      <option value="50">前 50 筆</option>
-      <option value="100">前 100 筆</option>
-    </select>
-  </div>
-</div>
+</details>
 <p id="displaySummary" class="display-summary" role="status" aria-live="polite">正在準備排序……</p>
 <div id="entries" class="cards" data-layout="single" aria-live="polite"></div></div>
 <div class="panel"><h2>最近發布紀錄</h2><p class="muted">這份紀錄不顯示投稿 IP；IG 的「已發布」為管理員手動標記，不代表 Instagram API 已確認。</p><ol id="audit" class="activity"><li>正在載入……</li></ol></div>
@@ -116,7 +133,7 @@ const db=createClient('https://skasotsajckswovqhbeo.supabase.co','sb_publishable
 const $=id=>document.getElementById(id);
 const notice=$('notice'),workspace=$('workspace'),entries=$('entries'),audit=$('audit');
 const state={items:[],web:new Map(),ig:new Map(),busy:false,authorized:false,image:null,captionEdits:new Map()};
-const displayPrefKey='nn_publish_view_v142';
+const displayPrefKey='nn_publish_view_v143';
 function restoreDisplayPrefs(){
   try{
     const saved=JSON.parse(localStorage.getItem(displayPrefKey)||'{}');
@@ -129,6 +146,18 @@ function restoreDisplayPrefs(){
 function saveDisplayPrefs(){
   try{localStorage.setItem(displayPrefKey,JSON.stringify({sort:$('sortOrder').value,layout:$('layoutMode').value,count:$('displayCount').value}))}catch{}
 }
+function updateCurrentDisplay(){
+  const names={
+    'number-asc':'編號：舊→新',
+    'number-desc':'編號：新→舊',
+    'new-first':'時間：新→舊',
+    'old-first':'時間：舊→新'
+  };
+  const sorting=names[$('sortOrder').value]||'編號排序';
+  const layout=$('layoutMode').value==='grid'?'自動網格':'單欄';
+  const count=$('displayCount').value==='all'?'全部':$('displayCount').value+' 筆';
+  $('currentDisplay').textContent=`${sorting} · ${layout} · ${count}`;
+}
 function comparePosts(a,b){
   const mode=$('sortOrder').value;
   const numA=BigInt(String(a.post_number)),numB=BigInt(String(b.post_number));
@@ -140,6 +169,7 @@ function comparePosts(a,b){
   return (mode==='old-first'?timeA-timeB:timeB-timeA)||numberDiff;
 }
 restoreDisplayPrefs();
+updateCurrentDisplay();
 const dateText=value=>value?new Date(value).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false}):'尚無';
 const label=n=>'#NN匿名'+String(n).padStart(4,'0');
 function elt(tag,className,text){const el=document.createElement(tag);if(className)el.className=className;if(text!==undefined)el.textContent=text;return el}
@@ -293,7 +323,7 @@ $('closeImage').addEventListener('click',closeModal);document.addEventListener('
 $('search').addEventListener('input',()=>{if(state.authorized)render()});
 $('filter').addEventListener('change',()=>{if(state.authorized)render()});
 for(const id of ['sortOrder','layoutMode','displayCount']){
-  $(id).addEventListener('change',()=>{saveDisplayPrefs();if(state.authorized)render()});
+  $(id).addEventListener('change',()=>{saveDisplayPrefs();updateCurrentDisplay();if(state.authorized)render()});
 }
 $('refresh').addEventListener('click',load);
 try{await adminCheck();await load()}catch(error){workspace.style.display='none';setNotice('🔒 '+msg(error)+'。請先從管理員登入頁登入。','warn');const link=elt('a','','前往管理員登入');link.href='admin-login.html';notice.append(document.createTextNode(' '),link)}
