@@ -44,20 +44,27 @@
     .number.allocated { color: #b3f5ca; }
     .empty { text-align: center; padding: 26px; color: #b1c3e2; }
     #privateArea { display: none; }
+    .reply-nav { display:flex;flex-wrap:wrap;gap:9px;justify-content:flex-end; }
+    .reply-nav a,.publish-link {display:inline-flex;align-items:center;min-height:40px;padding:9px 12px;border:1px solid #6486c1;border-radius:11px;background:#1c3055;color:#eef5ff;text-decoration:none;font-size:13px;font-weight:700;}
+    .reply-nav a:hover,.publish-link:hover {border-color:#a6c7ff;background:#27447b;}
+    .publish-link { margin-top:12px;width:fit-content; }
+    @media(max-width:620px){.reply-nav{justify-content:flex-start;} .reply-nav a{flex:1 1 calc(50% - 9px);justify-content:center;}}
     footer { text-align: center; padding: 20px; font-size: 12px; color: #9cacd0; }
   </style>
 </head>
 <body>
   <header>
-    <div><div class="brand">NN匿名</div><div class="sub">EDITOR REPLY · V1.1</div></div>
-    <nav style="display:flex;gap:14px;flex-wrap:wrap">
-  <a href="admin-dashboard.html">返回審核後台</a>
-  <a href="admin-publish.html">網站發布／IG 管理 →</a>
-</nav>
+    <div><div class="brand">NN匿名</div><div class="sub">EDITOR REPLY · V1.2</div></div>
+    <nav class="reply-nav" aria-label="NN匿名管理功能">
+      <a href="admin-dashboard.html">投稿審核</a>
+      <a href="admin-publish.html">網站／IG 發布</a>
+      <a href="admin-stats.html">統計中心</a>
+      <a href="nn-portal.html">全部入口</a>
+    </nav>
   </header>
   <main>
     <h1>小編回覆管理</h1>
-    <p class="muted">僅顯示已通過的投稿。儲存回覆不會分配編號；按「準備發布」並再次確認後才會分配正式編號。所有操作都不會自動公開或發布到 IG。</p>
+    <p class="muted">僅顯示已通過的投稿。儲存回覆不會分配編號；按「準備發布」確認後才會分配正式編號。網站發布與 Instagram 圖片管理請到「網站／IG 發布」操作；儲存回覆、分配編號本身都不會公開貼文。</p>
     <div id="notice" class="notice" role="status" aria-live="polite">🔐 正在驗證管理員身分……</div>
     <div id="privateArea">
       <div class="panel toolbar">
@@ -70,7 +77,7 @@
       </section>
     </div>
   </main>
-  <footer>© 2026 NN匿名 · 獨立經營的匿名交流平台<div style="margin-top:8px;">本平台由黑熊工作室提供</div></footer>
+  <footer>© 2026 NN匿名 · 獨立經營的匿名交流平台</footer>
   <script type="module">
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
     // Supabase publishable key is intended for browser use. Never put service_role here.
@@ -147,6 +154,10 @@
         append(article, "div", "content", item.content || "");
         const numberDisplay = append(article, "div", "number", item.post_number == null ? "正式編號：尚未分配" : `正式編號：#NN匿名${String(item.post_number).padStart(4, "0")}`);
         if (item.post_number != null) numberDisplay.classList.add("allocated");
+        if (item.post_number != null) {
+          const publishLink = append(article, "a", "publish-link", "前往網站／IG 發布中心 →");
+          publishLink.href = "admin-publish.html";
+        }
         const label = append(article, "label", "", "小編回覆");
         const editor = append(article, "textarea");
         editor.id = `reply-${item.id}`;
