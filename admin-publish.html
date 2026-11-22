@@ -52,7 +52,7 @@ a{color:#b7d4ff}header{border-bottom:1px solid var(--line);padding:18px max(16px
 </style>
 </head>
 <body>
-<header><div><strong>NN匿名</strong><small>PUBLISHING STUDIO · V1.4.4</small></div></header>
+<header><div><strong>NN匿名</strong><small>PUBLISHING STUDIO · V1.5</small></div></header>
 <!-- NN匿名 V1.4.1 統一管理導覽：各頁面相同版型 -->
 <div class="nn-nav-shell"><nav class="nn-unified-nav" aria-label="NN匿名管理員導覽">
   <a class="nn-tab" href="admin-dashboard.html">投稿審核</a>
@@ -76,6 +76,7 @@ a{color:#b7d4ff}header{border-bottom:1px solid var(--line);padding:18px max(16px
 <section id="workspace" aria-label="管理工作區">
 <div class="stats" aria-label="目前載入資料統計"><div class="stat"><b id="totalStat">—</b><span>已編號投稿</span></div><div class="stat"><b id="webStat">—</b><span>已公開到網站</span></div><div class="stat"><b id="igStat">—</b><span>IG 已標記發布</span></div></div>
 <p class="helper">統計以本次讀取的最新最多 200 筆已通過且已編號投稿為準，不是全站歷史總數。</p>
+<div class="panel" style="padding:14px 16px"><a href="admin-publication-history.html" style="display:inline-flex;align-items:center;min-height:44px;color:#c2dcff;font-weight:750;text-decoration:none">📋 最近發布紀錄 →</a><p class="helper" style="margin:0">發布操作紀錄已移至獨立專頁。</p></div>
 <div class="panel"><h2>投稿發布工作台</h2>
 <div class="toolbar">
   <input id="search" type="search" placeholder="搜尋編號、投稿或回覆內容" aria-label="搜尋投稿">
@@ -124,7 +125,7 @@ a{color:#b7d4ff}header{border-bottom:1px solid var(--line);padding:18px max(16px
 </details>
 <p id="displaySummary" class="display-summary" role="status" aria-live="polite">正在準備排序……</p>
 <div id="entries" class="cards" data-layout="single" aria-live="polite"></div></div>
-<div class="panel"><h2>最近發布紀錄</h2><p class="muted">這份紀錄不顯示投稿 IP；IG 的「已發布」為管理員手動標記，不代表 Instagram API 已確認。</p><ol id="audit" class="activity"><li>正在載入……</li></ol></div>
+
 </section>
 <footer>
   © 2026 NN匿名 · V1.4 · 管理員專用<br>
@@ -137,7 +138,7 @@ import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 // 唯一放在瀏覽器中的只有 Supabase 公開 publishable key；不可放置 service_role 或 Secret Key。
 const db=createClient('https://skasotsajckswovqhbeo.supabase.co','sb_publishable_k81-D28G-ipWmKVRwX2zpg_7y_xMvLX',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 const $=id=>document.getElementById(id);
-const notice=$('notice'),workspace=$('workspace'),entries=$('entries'),audit=$('audit');
+const notice=$('notice'),workspace=$('workspace'),entries=$('entries');
 const state={items:[],web:new Map(),ig:new Map(),busy:false,authorized:false,image:null,captionEdits:new Map()};
 const displayPrefKey='nn_publish_view_v143';
 function restoreDisplayPrefs(){
@@ -193,10 +194,9 @@ try{
  state.items=(messages.data||[]).filter(x=>x.post_number!==null&&x.post_number!==undefined&&String(x.editor_reply||'').trim());
  state.web=new Map((web.data||[]).map(x=>[String(x.post_number),x]));
  state.ig=new Map((ig.data||[]).map(x=>[String(x.post_number),x]));
- render();await loadAudit();
+ render();
 }catch(error){console.error('NN publish dashboard load failed',error);setNotice('⚠️ 讀取失敗。請確認已先在 Supabase 套用本版 SQL，並檢查既有管理員 RLS 權限。','warn');entries.replaceChildren(elt('div','empty',msg(error)))}
 finally{state.busy=false;$('refresh').disabled=false}}
-async function loadAudit(){const{data,error}=await db.rpc('nn_recent_publication_activity',{p_limit:20});audit.replaceChildren();if(error){audit.append(elt('li','','尚無法讀取稽核紀錄'));return}for(const a of data||[]){audit.append(elt('li','',`${dateText(a.created_at)} · ${label(a.post_number)} · ${a.action}`))}if(!data?.length)audit.append(elt('li','','目前沒有發布紀錄'))}
 function makeDefaultCaption(x){return `匿名提問：\n${x.content||''}\n\n小編：\n${x.editor_reply||''}\n\n${label(x.post_number)}`}
 function render(){
   entries.replaceChildren();
