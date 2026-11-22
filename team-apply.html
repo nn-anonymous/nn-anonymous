@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080f26">
+  <title>加入 NN匿名團隊｜NN匿名</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif; color: #f4f7ff; background: radial-gradient(circle at 20% 12%, #243e86, transparent 43%), radial-gradient(circle at 90% 80%, #312050, transparent 43%), #080f26; }
+    .wrap { width: min(680px, calc(100% - 36px)); margin: 0 auto; padding: 34px 0 72px; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .brand { font-size: 23px; font-weight: 900; text-decoration: none; color: #fff; }
+    .brand span { color: #9ab5ff; }
+    .back { color: #bdcff9; text-decoration: none; font-size: 14px; }
+    .hero { text-align: center; padding: 48px 0 24px; }
+    .mark { width: 74px; height: 74px; display: grid; place-items: center; margin: auto; border-radius: 23px; background: linear-gradient(130deg, #328afa, #7854e9); font-size: 32px; font-weight: 900; box-shadow: 0 18px 60px #336bff55; }
+    h1 { font-size: clamp(28px, 7vw, 38px); margin: 22px 0 10px; }
+    .subtitle { color: #c6d2f2; line-height: 1.8; margin: 0; }
+    .tag { display: inline-block; margin-top: 17px; padding: 7px 15px; border: 1px solid #667dd7; color: #dbe6ff; border-radius: 999px; font-size: 12px; }
+    .panel { padding: 24px; border: 1px solid #586b9b; border-radius: 22px; background: #111d3acc; box-shadow: 0 12px 48px #02071845; }
+    h2 { margin: 2px 0 18px; font-size: 21px; }
+    .hint { color: #b9c8e9; font-size: 13px; line-height: 1.75; }
+    .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0 24px; }
+    .role { border: 1px solid #576a9f; border-radius: 13px; padding: 13px; background: #17264a; font-size: 14px; line-height: 1.7; }
+    label.field { display: block; margin: 16px 0 8px; font-size: 14px; font-weight: 650; }
+    input, select, textarea { width: 100%; padding: 13px; border-radius: 11px; border: 1px solid #5c709e; background: #0b1630; color: #fff; font: inherit; outline-offset: 2px; }
+    input:focus, select:focus, textarea:focus { border-color: #95aeff; }
+    textarea { min-height: 110px; resize: vertical; }
+    input::placeholder, textarea::placeholder { color: #9eaccd; }
+    .contact { display: grid; grid-template-columns: 150px 1fr; gap: 10px; }
+    .notice { margin-top: 20px; padding: 15px; background: #0c1937; border: 1px solid #506595; border-radius: 13px; }
+    .check { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.7; }
+    .check input { width: 18px; height: 18px; flex: none; margin-top: 3px; }
+    #captcha { margin: 18px 0; min-height: 28px; }
+    button { width: 100%; border: 0; border-radius: 13px; padding: 15px; color: #fff; font-size: 16px; font-weight: 800; background: linear-gradient(115deg,#3289f8,#7753ee); cursor: pointer; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    #status { margin: 14px 0 0; min-height: 28px; font-size: 14px; line-height: 1.7; color: #dbe6ff; }
+    footer { text-align: center; margin-top: 28px; color: #9fb0d8; font-size: 12px; line-height: 1.8; }
+    @media (max-width: 490px) { .roles { grid-template-columns: 1fr; } .contact { grid-template-columns: 1fr; } .panel { padding: 19px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html">NN<span>匿名</span></a>
+      <a class="back" href="index.html">← 返回首頁</a>
+    </div>
+    <div class="hero">
+      <div class="mark" aria-hidden="true">NN</div>
+      <h1>加入 NN匿名團隊</h1>
+      <p class="subtitle">一起守護匿名交流空間，讓更多人的心聲被聽見。</p>
+      <div class="tag">志願參與・無薪職位・文字面談</div>
+    </div>
+    <div class="panel">
+      <h2>團隊招募申請</h2>
+      <div class="roles">
+        <div class="role"><strong>🎨 美編 Designer</strong><div class="hint">協助視覺設計、貼文排版與素材製作。</div></div>
+        <div class="role"><strong>📝 小編審核 Reviewer</strong><div class="hint">協助依規則檢視投稿，重視保密與尊重。</div></div>
+      </div>
+      <p class="hint">申請流程：填寫資料 → 團隊審核 → 文字面談 → 後續通知。正式錄取前須完成保密協議程序。</p>
+      <form id="applyForm">
+        <label class="field" for="nickname">稱呼／暱稱 *</label>
+        <input id="nickname" name="nickname" type="text" maxlength="40" required autocomplete="nickname" placeholder="不必填寫真實姓名">
+
+        <label class="field" for="position">想申請的職位 *</label>
+        <select id="position" name="position" required>
+          <option value="">請選擇</option>
+          <option value="designer">美編（Designer）</option>
+          <option value="reviewer">小編審核（Reviewer）</option>
+        </select>
+
+        <label class="field" for="contact_type">聯絡方式 *</label>
+        <div class="contact">
+          <select id="contact_type" name="contact_type" aria-label="聯絡方式類型">
+            <option value="email">Email</option>
+            <option value="instagram">Instagram</option>
+          </select>
+          <input id="contact_value" name="contact_value" type="email" maxlength="120" required placeholder="example@email.com" autocomplete="email" aria-label="聯絡資訊">
+        </div>
+
+        <label class="field" for="introduction">自我介紹 *</label>
+        <textarea id="introduction" name="introduction" minlength="1" maxlength="2000" required placeholder="分享你的興趣、經驗或擅長的事情，不必提供敏感個資。"></textarea>
+
+        <label class="field" for="motivation">為什麼想加入我們？ *</label>
+        <textarea id="motivation" name="motivation" minlength="1" maxlength="2000" required placeholder="告訴我們你想參與的原因。"></textarea>
+
+        <div class="notice">
+          <div class="hint">資料使用提醒：以上資料將用於申請審核、文字面談及聯繫。請勿填入身分證字號、住址、密碼等敏感資料。正式開放前，團隊仍需補齊保存期限、刪除與申請者權利等隱私說明。</div>
+          <label class="check" for="privacy_consent" style="margin-top: 12px;">
+            <input id="privacy_consent" name="privacy_consent" type="checkbox" required>
+            <span>我已閱讀上述資料使用提醒，並同意以所填資料進行招募審核與聯繫。*</span>
+          </label>
+        </div>
+
+        <div id="captcha" aria-label="Cloudflare Turnstile 驗證區"></div>
+        <button id="submitBtn" type="submit" disabled>招募功能尚未開放</button>
+        <div id="status" role="status" aria-live="polite">目前為頁面建置階段，尚未開放送出申請。</div>
+      </form>
+    </div>
+    <footer>© 2026 NN匿名｜獨立經營的匿名交流平台<br>非學校或官方機構設立</footer>
+  </div>
+
+  <script>
+    // 正式啟用前：確認隱私政策、Turnstile 允許網域與完整送出測試。
+    const APPLICATIONS_ENABLED = false;
+    const TURNSTILE_SITE_KEY = ""; // 只放 Cloudflare 公開 Site Key，絕不能放 Secret Key！
+    const API_URL = "https://skasotsajckswovqhbeo.supabase.co/functions/v1/nn-team-apply";
+
+    const form = document.getElementById("applyForm");
+    const btn = document.getElementById("submitBtn");
+    const status = document.getElementById("status");
+    const type = document.getElementById("contact_type");
+    const contact = document.getElementById("contact_value");
+    let turnstileToken = "";
+    let widgetId = null;
+
+    type.addEventListener("change", () => {
+      const email = type.value === "email";
+      contact.type = email ? "email" : "text";
+      contact.placeholder = email ? "example@email.com" : "Instagram 帳號（不含 @ 也可以）";
+      contact.autocomplete = email ? "email" : "off";
+      contact.value = "";
+    });
+
+    window.onTurnstileReady = function () {
+      widgetId = window.turnstile.render("#captcha", {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback: token => { turnstileToken = token; },
+        "expired-callback": () => { turnstileToken = ""; },
+        "error-callback": () => { turnstileToken = ""; status.textContent = "機器人驗證發生錯誤，請重新整理頁面。"; }
+      });
+    };
+
+    if (APPLICATIONS_ENABLED && TURNSTILE_SITE_KEY.trim()) {
+      btn.disabled = false;
+      btn.textContent = "送出團隊申請";
+      status.textContent = "請填妥表單並完成驗證。";
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileReady&render=explicit";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!APPLICATIONS_ENABLED || !TURNSTILE_SITE_KEY.trim()) return;
+      if (!form.reportValidity()) return;
+      if (!turnstileToken) { status.textContent = "請先完成機器人驗證。"; return; }
+
+      btn.disabled = true;
+      status.textContent = "正在安全傳送申請資料……";
+      const payload = {
+        nickname: document.getElementById("nickname").value.trim(),
+        position: document.getElementById("position").value,
+        contact_type: type.value,
+        contact_value: contact.value.trim(),
+        introduction: document.getElementById("introduction").value.trim(),
+        motivation: document.getElementById("motivation").value.trim(),
+        privacy_consent: document.getElementById("privacy_consent").checked,
+        turnstileToken
+      };
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (response.ok && result.success === true) {
+          status.textContent = "申請已送出。如有下一階段安排，團隊將透過你提供的方式聯繫。";
+          form.reset();
+        } else {
+          status.textContent = result.message || "送出失敗，請稍後再試。";
+        }
+      } catch (_) {
+        status.textContent = "無法連線，請稍後再試。";
+      } finally {
+        turnstileToken = "";
+        if (widgetId !== null && window.turnstile) window.turnstile.reset(widgetId);
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
