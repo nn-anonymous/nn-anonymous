@@ -62,11 +62,37 @@
 .nn-unified-nav .nn-tab[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:#8db4ff;border-radius:4px 4px 0 0;box-shadow:0 0 8px #8db4ff55}
 @media(max-width:600px){.nn-nav-shell{padding:0 14px}.nn-unified-nav{gap:23px}.nn-unified-nav .nn-tab{font-size:15px;min-height:49px;padding:12px 0}}
 
+.view-options{margin:12px 0 7px;border:1px solid #5274aa86;border-radius:12px;background:#10254a;overflow:hidden}
+.view-options-toggle{display:flex;align-items:center;gap:8px;flex-wrap:wrap;cursor:pointer;list-style:none;margin:0;padding:9px 12px;min-height:44px;color:#e4eeff;font-weight:700;font-size:14px;line-height:1.4}
+.view-options-toggle::-webkit-details-marker{display:none}
+.view-options-toggle::after{content:'⌄';margin-left:auto;color:#aacbff;font-size:18px;line-height:1;transition:transform .16s}
+.view-options[open] .view-options-toggle::after{transform:rotate(180deg)}
+.view-options .setting-current{font-size:12px;color:#b4ccf5;font-weight:500;min-width:0;overflow-wrap:anywhere}
+.view-options .display-settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:10px 12px 12px;border-top:1px solid #5274aa60}
+
+/* V1.4.4: 保證 Safari 收合時不顯示選項區，避免 CSS grid 覆蓋 details 預設樣式 */
+.view-options:not([open]) > .display-settings { display: none !important; }
+.view-options .setting{min-width:0}
+.view-options .setting label{margin:0 0 4px;color:#d8e7ff;font-size:12px;line-height:1.4}
+.view-options .setting select{display:block;width:100%;min-width:0;max-width:100%;height:40px;padding:7px 9px;font-size:13px;line-height:1.4;border-radius:9px}
+.display-summary{font-size:12px;color:#aec8ef;margin:5px 0 12px;line-height:1.5}
+.cards[data-layout="single"]{grid-template-columns:minmax(0,1fr)}
+.cards[data-layout="grid"]{grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))}
+@media(max-width:700px){
+ .view-options .display-settings{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:9px 11px 11px}
+ .view-options .setting:last-child{grid-column:1/-1}
+ .view-options .setting select{font-size:14px}
+ .cards[data-layout="grid"]{grid-template-columns:minmax(0,1fr)}
+}
+
+
+.view-options .display-settings{grid-template-columns:minmax(0,1fr)}
+.view-options select{font:inherit;background:#0e1c3b;color:#fff;border:1px solid #637cad;}
 </style>
 </head>
 <body>
   <header>
-    <div><div class="brand">NN匿名</div><div class="sub">EDITOR REPLY · V1.2</div></div>
+    <div><div class="brand">NN匿名</div><div class="sub">EDITOR REPLY · V1.5</div></div>
     
   </header>
 <!-- NN匿名 V1.4.1 統一管理導覽：各頁面相同版型 -->
@@ -96,6 +122,13 @@
       </div>
       <section class="panel">
         <h2>已通過投稿與小編回覆</h2>
+        <details class="view-options" id="replyViewOptions">
+          <summary class="view-options-toggle"><span>⚙️ 排序與顯示</span><span class="setting-current" id="replyCurrentSort">編號：新→舊</span></summary>
+          <div class="display-settings"><div class="setting"><label for="replySort">排序方式</label><select id="replySort">
+            <option value="number-asc">編號由小到大</option><option value="number-desc" selected>編號由大到小</option><option value="new-first">時間：最新在上</option><option value="old-first">時間：最舊在上</option>
+          </select></div></div>
+        </details>
+        <p class="display-summary" id="replySortHint" role="status">排序僅調整目前載入的投稿，不變更正式編號。未編號投稿在編號排序時列於下方。</p>
         <div id="entries" class="empty">正在載入……</div>
       </section>
     </div>
@@ -119,6 +152,30 @@
     const refresh = document.querySelector("#refresh");
     let authorized = false;
     let loading = false;
+    const sortSelect = document.querySelector('#replySort');
+    const replyCards = new Map();
+    const sortNames = {'number-asc':'編號：舊→新','number-desc':'編號：新→舊','new-first':'時間：新→舊','old-first':'時間：舊→新'};
+    try { const pref=localStorage.getItem('nn_reply_sort_v15'); if(Object.hasOwn(sortNames,pref)) sortSelect.value=pref; } catch {}
+    function compareReply(a,b,mode) {
+      const timeA=Date.parse(a.created_at)||0,timeB=Date.parse(b.created_at)||0;
+      const idA=BigInt(String(a.id)),idB=BigInt(String(b.id));
+      const tie=idA===idB?0:idA>idB?-1:1;
+      if(mode==='new-first'||mode==='old-first') return (mode==='old-first'?timeA-timeB:timeB-timeA)||tie;
+      if(a.post_number==null && b.post_number==null) return timeB-timeA||tie;
+      if(a.post_number==null) return 1;
+      if(b.post_number==null) return -1;
+      const x=BigInt(String(a.post_number)),y=BigInt(String(b.post_number));
+      const d=x===y?0:x<y?-1:1;
+      return (mode==='number-asc'?d:-d)||tie;
+    }
+    function applyReplySort(){
+      const mode=sortSelect.value;
+      document.querySelector('#replyCurrentSort').textContent=sortNames[mode];
+      // 移動既有 DOM 卡片，保留輸入框、草稿、事件及儲存狀態。
+      [...replyCards.values()].sort((a,b)=>compareReply(a.item,b.item,mode)).forEach(({node})=>entries.append(node));
+    }
+    sortSelect.addEventListener('change',()=>{try{localStorage.setItem('nn_reply_sort_v15',sortSelect.value)}catch{} applyReplySort()});
+    applyReplySort();
     const setNotice = message => { notice.textContent = message; };
     const timeText = value => {
       const d = new Date(value);
@@ -143,6 +200,8 @@
     async function load() {
       if (!authorized || loading) return;
       loading = true;
+      replyCards.clear();
+      sortSelect.disabled = true;
       refresh.disabled = true;
       entries.replaceChildren();
       append(entries, "p", "empty", "正在讀取已通過投稿……");
@@ -161,10 +220,12 @@
         setNotice("⚠️ 目前無法載入已通過投稿。");
       } finally {
         loading = false;
+        sortSelect.disabled = false;
         refresh.disabled = false;
       }
     }
     function render(items) {
+      replyCards.clear();
       entries.replaceChildren();
       entries.className = "";
       count.textContent = String(items.length);
@@ -174,6 +235,7 @@
       }
       for (const item of items) {
         const article = append(entries, "article", "entry");
+        replyCards.set(String(item.id),{item,node:article});
         const head = append(article, "div", "entry-head");
         append(head, "span", "", `投稿 #${item.id} · ${timeText(item.created_at)}`);
         append(head, "span", "", "已通過");
@@ -235,6 +297,7 @@
             numberDisplay.classList.add("allocated");
             publishButton.textContent = "已分配正式編號";
             publishState.textContent = "✅ 已準備發布；尚未公開或發布到 IG。";
+            applyReplySort();
           } catch (error) {
             publishState.textContent = `⚠️ ${error instanceof Error ? error.message : "編號分配失敗"}`;
           } finally {
@@ -273,6 +336,7 @@
           }
         });
       }
+      applyReplySort();
     }
     refresh.addEventListener("click", load);
     try {
