@@ -132,6 +132,14 @@
       });
     };
 
+if (!APPLICATIONS_ENABLED && TURNSTILE_SITE_KEY.trim()) {
+  const script = document.createElement("script");
+  script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileReady&render=explicit";
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+}
+
     if (APPLICATIONS_ENABLED && TURNSTILE_SITE_KEY.trim()) {
       btn.disabled = false;
       btn.textContent = "送出團隊申請";
